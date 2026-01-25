@@ -38,3 +38,5 @@ out/
 
 ### Custom ###
 src/main/resources/application-secret.yml
+db_dev.mv.db
+db_dev.trace.db
