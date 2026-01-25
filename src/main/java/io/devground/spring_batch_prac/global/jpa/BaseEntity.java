@@ -6,6 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import io.devground.spring_batch_prac.standard.util.Ut;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,4 +33,8 @@ public class BaseEntity {
 
 	@LastModifiedDate
 	private LocalDateTime modifyDate;
+
+	public String getModelName() {
+		return Ut.str.lcfirst(this.getClass().getSimpleName());
+	}
 }

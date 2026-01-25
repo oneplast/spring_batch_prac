@@ -1,11 +1,9 @@
-package io.devground.spring_batch_prac.domain.book.book.entity;
+package io.devground.spring_batch_prac.domain.product.product.entity;
 
 import io.devground.spring_batch_prac.domain.member.member.entity.Member;
-import io.devground.spring_batch_prac.domain.product.product.entity.Product;
 import io.devground.spring_batch_prac.global.jpa.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,21 +13,20 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
-@Setter
 @ToString(callSuper = true)
-public class Book extends BaseEntity {
+public class Product extends BaseEntity {
 
 	@ManyToOne
-	private Member author;
-	@OneToOne
-	private Product product;
+	private Member maker;
 
-	private String title;
-	private String body;
+	private String relTypeCode;
+	private long relId;
 
+	private String name;
 	private int price;
 }

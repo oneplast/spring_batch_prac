@@ -9,6 +9,7 @@ import io.devground.spring_batch_prac.domain.book.book.entity.Book;
 import io.devground.spring_batch_prac.domain.book.book.service.BookService;
 import io.devground.spring_batch_prac.domain.member.member.entity.Member;
 import io.devground.spring_batch_prac.domain.member.member.service.MemberService;
+import io.devground.spring_batch_prac.domain.product.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -17,6 +18,7 @@ public class NotProd implements ApplicationRunner {
 
 	private final MemberService memberService;
 	private final BookService bookService;
+	private final ProductService productService;
 
 	@Override
 	@Transactional
@@ -36,5 +38,10 @@ public class NotProd implements ApplicationRunner {
 		Book book4 = bookService.createBook(memberUser3, "책 제목 4", "책 내용 4", 10000);
 		Book book5 = bookService.createBook(memberUser3, "책 제목 5", "책 내용 5", 10000);
 		Book book6 = bookService.createBook(memberUser3, "책 제목 6", "책 내용 6", 10000);
+
+		productService.createBook(book3);
+		productService.createBook(book4);
+		productService.createBook(book5);
+		productService.createBook(book5);
 	}
 }
