@@ -93,6 +93,7 @@ public class NotProd implements ApplicationRunner {
 
 		Order order3 = orderService.createOrder(memberUser2);
 		orderService.checkCanPay(order3, 55_000);
+		orderService.payByTossPayments(order3, 55_000);
 	}
 
 	@Transactional

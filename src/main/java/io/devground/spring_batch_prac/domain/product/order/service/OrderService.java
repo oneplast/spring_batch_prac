@@ -1,12 +1,13 @@
 package io.devground.spring_batch_prac.domain.product.order.service;
 
+import static io.devground.spring_batch_prac.domain.cash.cash.entity.CashLog.EventType.*;
+import static org.springframework.http.HttpStatus.*;
+
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.devground.spring_batch_prac.domain.cash.cash.entity.CashLog;
 import io.devground.spring_batch_prac.domain.member.member.entity.Member;
 import io.devground.spring_batch_prac.domain.member.member.service.MemberService;
 import io.devground.spring_batch_prac.domain.product.cart.entity.CartItem;
@@ -49,10 +50,32 @@ public class OrderService {
 		long payPrice = order.calcPayPrice();
 
 		if (payPrice > restCash) {
-			throw new GlobalException(HttpStatus.BAD_REQUEST.value(), "예치금이 부족합니다.");
+			throw new GlobalException(BAD_REQUEST.value(), "예치금이 부족합니다.");
 		}
 
-		memberService.addCash(buyer, payPrice * -1, CashLog.EventType.사용__예치금_주문결제, order);
+		memberService.addCash(buyer, payPrice * -1, 사용__예치금_주문결제, order);
+
+		payDone(order);
+	}
+
+	@Transactional
+	public void payByTossPayments(Order order, long pgPayPrice) {
+		Member buyer = order.getBuyer();
+		long restCash = buyer.getRestCash();
+		long payPrice = order.calcPayPrice();
+
+		long useRestCash = payPrice - pgPayPrice;
+
+		memberService.addCash(buyer, pgPayPrice, 충전__토스페이먼츠, order);
+		memberService.addCash(buyer, pgPayPrice * -1, 사용__토스페이먼츠_주문결제, order);
+
+		if (useRestCash > 0) {
+			if (useRestCash > restCash) {
+				throw new GlobalException(BAD_REQUEST.value(), "예치금이 부족합니다");
+			}
+
+			memberService.addCash(buyer, useRestCash * -1, 사용__예치금_주문결제, order);
+		}
 
 		payDone(order);
 	}
@@ -65,7 +88,7 @@ public class OrderService {
 	public void refund(Order order) {
 		long payPrice = order.calcPayPrice();
 
-		memberService.addCash(order.getBuyer(), payPrice, CashLog.EventType.환불__예치금_주문결제, order);
+		memberService.addCash(order.getBuyer(), payPrice, 환불__예치금_주문결제, order);
 
 		order.setCancelDate();
 		order.setRefundDate();
@@ -73,7 +96,7 @@ public class OrderService {
 
 	public void checkCanPay(Order order, long pgPayPrice) {
 		if (!canPay(order, pgPayPrice)) {
-			throw new GlobalException(HttpStatus.BAD_REQUEST.value(), "PG결제금 혹은 예치금 부족으로 인해 결제할 수 없습니다.");
+			throw new GlobalException(BAD_REQUEST.value(), "PG결제금 혹은 예치금 부족으로 인해 결제할 수 없습니다.");
 		}
 	}
 
