@@ -11,6 +11,7 @@ import io.devground.spring_batch_prac.domain.cash.cash.entity.CashLog;
 import io.devground.spring_batch_prac.domain.member.member.entity.Member;
 import io.devground.spring_batch_prac.domain.member.member.service.MemberService;
 import io.devground.spring_batch_prac.domain.product.cart.service.CartService;
+import io.devground.spring_batch_prac.domain.product.order.entity.Order;
 import io.devground.spring_batch_prac.domain.product.order.service.OrderService;
 import io.devground.spring_batch_prac.domain.product.product.entity.Product;
 import io.devground.spring_batch_prac.domain.product.product.service.ProductService;
@@ -54,9 +55,13 @@ public class NotProd implements ApplicationRunner {
 		cartService.addCart(memberUser1, product2);
 		cartService.addCart(memberUser1, product3);
 
-		memberService.addCash(memberUser1, 100_000, CashLog.EventType.충전__무통장입금, memberUser1);
+		memberService.addCash(memberUser1, 150_000, CashLog.EventType.충전__무통장입금, memberUser1);
 		memberService.addCash(memberUser1, -20_000, CashLog.EventType.출금__통장입금, memberUser1);
 
-		orderService.createOrder(memberUser1);
+		Order order1 = orderService.createOrder(memberUser1);
+
+		long order1PayPrice = order1.calcPayPrice();
+
+		orderService.payByCashOnly(order1);
 	}
 }

@@ -1,5 +1,6 @@
 package io.devground.spring_batch_prac.domain.product.order.entity;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,9 +37,9 @@ public class Order extends BaseEntity {
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<OrderItem> orderItems = new ArrayList<>();
 
-	private boolean isPaid;
-	private boolean isCanceled;
-	private boolean isRefunded;
+	private LocalDateTime payDate;
+	private LocalDateTime cancelDate;
+	private LocalDateTime refundDate;
 
 	public void addItem(CartItem cartItem) {
 		OrderItem orderItem = OrderItem.builder()
@@ -47,5 +48,13 @@ public class Order extends BaseEntity {
 			.build();
 
 		orderItems.add(orderItem);
+	}
+
+	public long calcPayPrice() {
+		return orderItems.stream().mapToLong(OrderItem::getPayPrice).sum();
+	}
+
+	public void setPaymentDone() {
+		payDate = LocalDateTime.now();
 	}
 }
