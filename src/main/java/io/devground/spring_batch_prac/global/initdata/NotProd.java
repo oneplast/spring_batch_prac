@@ -88,6 +88,9 @@ public class NotProd implements ApplicationRunner {
 		Order order2 = orderService.createOrder(memberUser3);
 		orderService.payByCashOnly(order2);
 		orderService.refund(order2);
+
+		Order order3 = orderService.createOrder(memberUser2);
+		orderService.checkPayPrice(order3, 85_000);
 	}
 
 	@Transactional

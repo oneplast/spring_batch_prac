@@ -70,4 +70,12 @@ public class OrderService {
 		order.setCancelDate();
 		order.setRefundDate();
 	}
+
+	public boolean checkPayPrice(Order order, long payPrice) {
+		if (order.calcPayPrice() != payPrice) {
+			throw new GlobalException(HttpStatus.BAD_REQUEST.value(), "결제금액이 일치하지 않습니다");
+		}
+
+		return true;
+	}
 }
