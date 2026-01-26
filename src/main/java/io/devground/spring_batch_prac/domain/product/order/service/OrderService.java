@@ -71,11 +71,15 @@ public class OrderService {
 		order.setRefundDate();
 	}
 
-	public boolean checkPayPrice(Order order, long payPrice) {
-		if (order.calcPayPrice() != payPrice) {
-			throw new GlobalException(HttpStatus.BAD_REQUEST.value(), "결제금액이 일치하지 않습니다");
+	public void checkCanPay(Order order, long pgPayPrice) {
+		if (!canPay(order, pgPayPrice)) {
+			throw new GlobalException(HttpStatus.BAD_REQUEST.value(), "PG결제금 혹은 예치금 부족으로 인해 결제할 수 없습니다.");
 		}
+	}
 
-		return true;
+	public boolean canPay(Order order, long pgPayPrice) {
+		long restCash = order.getBuyer().getRestCash();
+
+		return order.calcPayPrice() <= restCash + pgPayPrice;
 	}
 }

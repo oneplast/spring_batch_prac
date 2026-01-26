@@ -89,8 +89,10 @@ public class NotProd implements ApplicationRunner {
 		orderService.payByCashOnly(order2);
 		orderService.refund(order2);
 
+		memberService.addCash(memberUser2, 150_000, CashLog.EventType.충전__무통장입금, memberUser2);
+
 		Order order3 = orderService.createOrder(memberUser2);
-		orderService.checkPayPrice(order3, 85_000);
+		orderService.checkCanPay(order3, 55_000);
 	}
 
 	@Transactional
