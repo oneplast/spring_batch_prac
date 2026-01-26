@@ -4,8 +4,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+
 import io.devground.spring_batch_prac.domain.member.member.entity.Member;
 import io.devground.spring_batch_prac.domain.product.cart.entity.CartItem;
+import io.devground.spring_batch_prac.global.exception.GlobalException;
 import io.devground.spring_batch_prac.global.jpa.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -42,6 +45,10 @@ public class Order extends BaseEntity {
 	private LocalDateTime refundDate;
 
 	public void addItem(CartItem cartItem) {
+		if (buyer.has(cartItem.getProduct())) {
+			throw new GlobalException(HttpStatus.BAD_REQUEST.value(), "이미 구매한 상풉입니다.");
+		}
+
 		OrderItem orderItem = OrderItem.builder()
 			.order(this)
 			.product(cartItem.getProduct())

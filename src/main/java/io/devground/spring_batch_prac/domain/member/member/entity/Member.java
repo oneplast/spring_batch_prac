@@ -5,6 +5,7 @@ import java.util.List;
 
 import io.devground.spring_batch_prac.domain.book.book.entity.Book;
 import io.devground.spring_batch_prac.domain.member.myBook.entity.MyBook;
+import io.devground.spring_batch_prac.domain.product.product.entity.Product;
 import io.devground.spring_batch_prac.global.jpa.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -45,5 +46,17 @@ public class Member extends BaseEntity {
 
 	public void removeMyBook(Book book) {
 		myBooks.removeIf(myBook -> myBook.getBook().equals(book));
+	}
+
+	public boolean hasBook(Book book) {
+		return myBooks.stream()
+			.anyMatch(myBook -> myBook.getBook().equals(book));
+	}
+
+	public boolean has(Product product) {
+		return switch (product.getRelTypeCode()) {
+			case "book" -> hasBook(product.getBook());
+			default -> false;
+		};
 	}
 }

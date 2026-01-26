@@ -1,8 +1,10 @@
 package io.devground.spring_batch_prac.global.initdata;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.devground.spring_batch_prac.domain.book.book.entity.Book;
@@ -21,6 +23,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NotProd implements ApplicationRunner {
 
+	@Autowired
+	@Lazy
+	private NotProd self;
+
 	private final MemberService memberService;
 	private final BookService bookService;
 	private final CartService cartService;
@@ -28,8 +34,13 @@ public class NotProd implements ApplicationRunner {
 	private final OrderService orderService;
 
 	@Override
-	@Transactional
 	public void run(ApplicationArguments args) throws Exception {
+		self.work1();
+		self.work2();
+	}
+
+	@Transactional
+	protected void work1() {
 		if (memberService.findByUsername("admin").isPresent()) {
 			return;
 		}
@@ -77,5 +88,10 @@ public class NotProd implements ApplicationRunner {
 		Order order2 = orderService.createOrder(memberUser3);
 		orderService.payByCashOnly(order2);
 		orderService.refund(order2);
+	}
+
+	@Transactional
+	protected void work2() {
+
 	}
 }

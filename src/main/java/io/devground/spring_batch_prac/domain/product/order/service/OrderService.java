@@ -2,6 +2,7 @@ package io.devground.spring_batch_prac.domain.product.order.service;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +13,7 @@ import io.devground.spring_batch_prac.domain.product.cart.entity.CartItem;
 import io.devground.spring_batch_prac.domain.product.cart.service.CartService;
 import io.devground.spring_batch_prac.domain.product.order.entity.Order;
 import io.devground.spring_batch_prac.domain.product.order.repository.OrderRepository;
+import io.devground.spring_batch_prac.global.exception.GlobalException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -47,7 +49,7 @@ public class OrderService {
 		long payPrice = order.calcPayPrice();
 
 		if (payPrice > restCash) {
-			throw new RuntimeException("예치금이 부족합니다.");
+			throw new GlobalException(HttpStatus.BAD_REQUEST.value(), "예치금이 부족합니다.");
 		}
 
 		memberService.addCash(buyer, payPrice * -1, CashLog.EventType.사용__예치금_주문결제, order);
