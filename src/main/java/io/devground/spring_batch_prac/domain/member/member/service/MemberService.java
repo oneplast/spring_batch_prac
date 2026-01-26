@@ -47,6 +47,9 @@ public class MemberService {
 	@Transactional
 	public void addCash(Member member, long price, CashLog.EventType eventType, BaseEntity relEntity) {
 
-		cashService.addCash(member, price, eventType, relEntity);
+		CashLog cashLog = cashService.addCash(member, price, eventType, relEntity);
+
+		long newRestCash = member.getRestCash() + cashLog.getPrice();
+		member.setRestCash(newRestCash);
 	}
 }

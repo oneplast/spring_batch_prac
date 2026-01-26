@@ -36,7 +36,7 @@ public class CashLog extends BaseEntity {
 	public enum EventType {
 		충전__무통장입금,
 		충전__토스페이먼츠,
-		충전__통장입금,
+		출금__통장입금,
 		사용__토스페이먼츠_주문결제,
 		사용__예치금_주문결제,
 		환불__예치금_주문결제,
