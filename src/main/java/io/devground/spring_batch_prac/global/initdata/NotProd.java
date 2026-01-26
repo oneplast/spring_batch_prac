@@ -11,6 +11,7 @@ import io.devground.spring_batch_prac.domain.cash.cash.entity.CashLog;
 import io.devground.spring_batch_prac.domain.member.member.entity.Member;
 import io.devground.spring_batch_prac.domain.member.member.service.MemberService;
 import io.devground.spring_batch_prac.domain.product.cart.service.CartService;
+import io.devground.spring_batch_prac.domain.product.order.service.OrderService;
 import io.devground.spring_batch_prac.domain.product.product.entity.Product;
 import io.devground.spring_batch_prac.domain.product.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class NotProd implements ApplicationRunner {
 	private final BookService bookService;
 	private final CartService cartService;
 	private final ProductService productService;
+	private final OrderService orderService;
 
 	@Override
 	@Transactional
@@ -43,20 +45,18 @@ public class NotProd implements ApplicationRunner {
 		Book book5 = bookService.createBook(memberUser3, "책 제목 5", "책 내용 5", 15_000);
 		Book book6 = bookService.createBook(memberUser3, "책 제목 6", "책 내용 6", 20_000);
 
-		Product product1 = productService.createBook(book3);
-		Product product2 = productService.createBook(book4);
-		Product product3 = productService.createBook(book5);
-		Product product4 = productService.createBook(book5);
+		Product product1 = productService.createProduct(book3);
+		Product product2 = productService.createProduct(book4);
+		Product product3 = productService.createProduct(book5);
+		Product product4 = productService.createProduct(book5);
 
 		cartService.addCart(memberUser1, product1);
 		cartService.addCart(memberUser1, product2);
 		cartService.addCart(memberUser1, product3);
 
-		System.out.println("memberUser1.getRestCash() = " + memberUser1.getRestCash());
-
 		memberService.addCash(memberUser1, 100_000, CashLog.EventType.충전__무통장입금, memberUser1);
 		memberService.addCash(memberUser1, -20_000, CashLog.EventType.출금__통장입금, memberUser1);
 
-		System.out.println("memberUser1.getRestCash() = " + memberUser1.getRestCash());
+		orderService.createOrder(memberUser1);
 	}
 }

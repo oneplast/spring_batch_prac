@@ -1,5 +1,7 @@
 package io.devground.spring_batch_prac.domain.product.cart.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,15 +19,25 @@ public class CartService {
 	private final CartItemRepository cartItemRepository;
 
 	@Transactional
-	public CartItem addCart(Member member, Product product) {
+	public CartItem addCart(Member buyer, Product product) {
 
 		CartItem cartItem = CartItem.builder()
-			.member(member)
+			.buyer(buyer)
 			.product(product)
 			.build();
 
 		cartItemRepository.save(cartItem);
 
 		return cartItem;
+	}
+
+	public List<CartItem> findItemsByBuyer(Member buyer) {
+
+		return cartItemRepository.findByBuyer(buyer);
+	}
+
+	public void delete(CartItem cartItem) {
+
+		cartItemRepository.delete(cartItem);
 	}
 }

@@ -16,7 +16,7 @@ public class ProductService {
 	private final ProductRepository productRepository;
 
 	@Transactional
-	public Product createBook(Book book) {
+	public Product createProduct(Book book) {
 
 		if (book.getProduct() != null) {
 			return book.getProduct();
