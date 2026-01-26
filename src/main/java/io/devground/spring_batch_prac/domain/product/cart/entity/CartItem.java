@@ -5,7 +5,6 @@ import io.devground.spring_batch_prac.domain.product.product.entity.Product;
 import io.devground.spring_batch_prac.global.jpa.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,6 +24,6 @@ public class CartItem extends BaseEntity {
 
 	@ManyToOne
 	private Member buyer;
-	@OneToOne
+	@ManyToOne
 	private Product product;
 }

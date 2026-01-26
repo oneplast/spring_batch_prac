@@ -51,9 +51,17 @@ public class NotProd implements ApplicationRunner {
 		Product product3 = productService.createProduct(book5);
 		Product product4 = productService.createProduct(book5);
 
-		cartService.addCart(memberUser1, product1);
-		cartService.addCart(memberUser1, product2);
-		cartService.addCart(memberUser1, product3);
+		cartService.addItem(memberUser1, product1);
+		cartService.addItem(memberUser1, product2);
+		cartService.addItem(memberUser1, product3);
+
+		cartService.addItem(memberUser2, product1);
+		cartService.addItem(memberUser2, product2);
+		cartService.addItem(memberUser2, product3);
+
+		cartService.addItem(memberUser3, product1);
+		cartService.addItem(memberUser3, product2);
+		cartService.addItem(memberUser3, product3);
 
 		memberService.addCash(memberUser1, 150_000, CashLog.EventType.충전__무통장입금, memberUser1);
 		memberService.addCash(memberUser1, -20_000, CashLog.EventType.출금__통장입금, memberUser1);
@@ -63,5 +71,11 @@ public class NotProd implements ApplicationRunner {
 		long order1PayPrice = order1.calcPayPrice();
 
 		orderService.payByCashOnly(order1);
+
+		memberService.addCash(memberUser3, 150_000, CashLog.EventType.충전__무통장입금, memberUser3);
+
+		Order order2 = orderService.createOrder(memberUser3);
+		orderService.payByCashOnly(order2);
+		orderService.refund(order2);
 	}
 }

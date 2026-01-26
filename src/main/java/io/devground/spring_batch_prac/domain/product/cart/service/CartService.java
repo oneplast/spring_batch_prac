@@ -19,7 +19,7 @@ public class CartService {
 	private final CartItemRepository cartItemRepository;
 
 	@Transactional
-	public CartItem addCart(Member buyer, Product product) {
+	public CartItem addItem(Member buyer, Product product) {
 
 		CartItem cartItem = CartItem.builder()
 			.buyer(buyer)
