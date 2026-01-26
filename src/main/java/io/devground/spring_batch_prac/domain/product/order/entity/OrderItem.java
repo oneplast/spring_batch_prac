@@ -29,4 +29,19 @@ public class OrderItem extends BaseEntity {
 	public long getPayPrice() {
 		return product.getPrice();
 	}
+
+	public void setPaymentDone() {
+		switch (product.getRelTypeCode()) {
+			case "book" -> order.getBuyer().addMyBook(product.getBook());
+		}
+	}
+
+	public void setCancelDone() {
+	}
+
+	public void setRefundDone() {
+		switch (product.getRelTypeCode()) {
+			case "book" -> order.getBuyer().removeMyBook(product.getBook());
+		}
+	}
 }

@@ -1,8 +1,7 @@
-package io.devground.spring_batch_prac.domain.product.product.entity;
+package io.devground.spring_batch_prac.domain.member.myBook.entity;
 
 import io.devground.spring_batch_prac.domain.book.book.entity.Book;
 import io.devground.spring_batch_prac.domain.member.member.entity.Member;
-import io.devground.spring_batch_prac.global.app.AppConfig;
 import io.devground.spring_batch_prac.global.jpa.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -21,18 +20,10 @@ import lombok.ToString;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(callSuper = true)
-public class Product extends BaseEntity {
+public class MyBook extends BaseEntity {
 
 	@ManyToOne
-	private Member maker;
-
-	private String relTypeCode;
-	private long relId;
-
-	private String name;
-	private int price;
-
-	public Book getBook() {
-		return AppConfig.getEntityManager().getReference(Book.class, relId);
-	}
+	private Member owner;
+	@ManyToOne
+	private Book book;
 }

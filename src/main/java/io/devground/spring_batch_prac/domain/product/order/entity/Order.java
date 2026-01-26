@@ -56,13 +56,19 @@ public class Order extends BaseEntity {
 
 	public void setPaymentDone() {
 		payDate = LocalDateTime.now();
+
+		orderItems.forEach(OrderItem::setPaymentDone);
 	}
 
 	public void setCancelDate() {
 		cancelDate = LocalDateTime.now();
+
+		orderItems.forEach(OrderItem::setCancelDone);
 	}
 
 	public void setRefundDate() {
 		refundDate = LocalDateTime.now();
+
+		orderItems.forEach(OrderItem::setRefundDone);
 	}
 }
