@@ -19,7 +19,7 @@ public class RsData<T> {
 		return new RsData<>(resultCode, msg, data);
 	}
 
-	public static RsData<Void> of(int resultCode, String msg) {
+	public static <T> RsData<T> of(int resultCode, String msg) {
 
 		return of(resultCode, msg, null);
 	}
