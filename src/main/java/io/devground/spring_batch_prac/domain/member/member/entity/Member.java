@@ -1,7 +1,11 @@
 package io.devground.spring_batch_prac.domain.member.member.entity;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import io.devground.spring_batch_prac.domain.book.book.entity.Book;
 import io.devground.spring_batch_prac.domain.member.myBook.entity.MyBook;
@@ -10,6 +14,7 @@ import io.devground.spring_batch_prac.global.jpa.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -58,5 +63,23 @@ public class Member extends BaseEntity {
 			case "book" -> hasBook(product.getBook());
 			default -> false;
 		};
+	}
+
+	@Transient
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		List<GrantedAuthority> authorities = new ArrayList<>();
+
+		authorities.add(new SimpleGrantedAuthority("ROLE_MEMBER"));
+
+		if (List.of("system", "admin").contains(username)) {
+			authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+		}
+
+		return authorities;
+	}
+
+	public boolean isAdmin() {
+		return getAuthorities().stream()
+			.anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 	}
 }
