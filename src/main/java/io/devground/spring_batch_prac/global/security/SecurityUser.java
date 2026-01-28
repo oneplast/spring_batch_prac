@@ -12,23 +12,20 @@ import lombok.Getter;
 public class SecurityUser extends User implements OAuth2User {
 
 	@Getter
-	private long id;
+	private final long id;
+
+	private final Map<String, Object> attributes;
 
 	public SecurityUser(long id, String username, String password,
-		Collection<? extends GrantedAuthority> authorities) {
+		Collection<? extends GrantedAuthority> authorities, Map<String, Object> attributes) {
 		super(username, password, authorities);
 		this.id = id;
-	}
-
-	public SecurityUser(long id, String username, String password, boolean enabled, boolean accountNonExpired,
-		boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
-		super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
-		this.id = id;
+		this.attributes = attributes;
 	}
 
 	@Override
 	public Map<String, Object> getAttributes() {
-		return null;
+		return attributes;
 	}
 
 	@Override

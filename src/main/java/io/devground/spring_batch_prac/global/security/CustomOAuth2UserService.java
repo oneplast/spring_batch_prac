@@ -25,16 +25,30 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 		OAuth2User oAuth2User = super.loadUser(userRequest);
 
-		String oauthId = oAuth2User.getName();
 		Map<String, Object> attributes = oAuth2User.getAttributes();
 
-		Map attributesProperties = (Map) attributes.get("properties");
-		String nickname = (String) attributesProperties.get("nickname");
-		String profileImageUrl = (String) attributesProperties.get("profile_image");
+		Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+		Map<String, Object> profile = kakaoAccount != null
+			? (Map<String, Object>) kakaoAccount.get("profile")
+			: null;
 
+		String nickname = profile != null ? (String) profile.get("nickname") : null;
+		String profileImageUrl = profile != null ? (String) profile.get("profile_image_url") : null;
+
+		if (nickname == null) {
+			Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
+
+			if (properties != null) {
+				nickname = (String) properties.get("nickname");
+				if (profileImageUrl == null) {
+					profileImageUrl = (String) properties.get("profile_image");
+				}
+			}
+		}
+
+		String oauthId = oAuth2User.getName();
 		String providerTypeCode = userRequest.getClientRegistration().getRegistrationId().toUpperCase();
-
-		String username = providerTypeCode + "__%s".formatted(oauthId);
+		String username = providerTypeCode + "__" + oauthId;
 
 		Member member = memberService.whenSocialLogin(providerTypeCode, username, nickname, profileImageUrl).getData();
 
@@ -42,7 +56,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 			member.getId(),
 			member.getUsername(),
 			member.getPassword(),
-			member.getAuthorities()
+			member.getAuthorities(),
+			attributes
 		);
 	}
 }

@@ -67,9 +67,9 @@ public class MemberService {
 		String providerTypeCode, String username, String nickname, String profileImageUrl
 	) {
 
-		findByUsername(username)
-			.ifPresent(m -> RsData.of(OK.value(), "이미 존재합니다.", m));
+		Optional<Member> opMember = findByUsername(username);
 
-		return join(username, "", nickname);
+		return opMember.map(member -> RsData.of(OK.value(), "이미 존재합니다.", member))
+			.orElseGet(() -> join(username, "", nickname));
 	}
 }

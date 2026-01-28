@@ -10,12 +10,14 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 
 @Configuration
 public class SecurityConfig {
 
 	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+	public SecurityFilterChain filterChain(HttpSecurity http, CustomOAuth2UserService oAuth2UserService) throws
+		Exception {
 
 		http
 			.authorizeHttpRequests(a -> a
@@ -34,9 +36,13 @@ public class SecurityConfig {
 			)
 			.oauth2Login(o -> o
 				.loginPage("/member/login")
+				.userInfoEndpoint(u -> u.userService(oAuth2UserService))
+				.defaultSuccessUrl("/", false)
+				.failureUrl("/member/login?failMsg=" + URLEncoder.encode("카카오 로그인에 실패했습니다.", StandardCharsets.UTF_8))
 			)
 			.logout(l -> l
-				.logoutUrl("/member/logout")
+				.logoutRequestMatcher(PathPatternRequestMatcher.withDefaults().matcher("/member/logout"))
+				.logoutSuccessUrl("/")
 			)
 		;
 
