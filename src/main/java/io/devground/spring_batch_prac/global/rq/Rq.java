@@ -2,13 +2,20 @@ package io.devground.spring_batch_prac.global.rq;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.annotation.RequestScope;
 
 import io.devground.spring_batch_prac.domain.member.member.entity.Member;
+import io.devground.spring_batch_prac.global.app.AppConfig;
 import io.devground.spring_batch_prac.global.rsdata.RsData;
+import io.devground.spring_batch_prac.global.security.SecurityUser;
+import io.devground.spring_batch_prac.standard.util.Ut;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -58,5 +65,57 @@ public class Rq {
 		}
 
 		return redirect(path, rs.getMsg());
+	}
+
+	public SecurityUser getUser() {
+		return (SecurityUser) Optional.ofNullable(SecurityContextHolder.getContext())
+			.map(SecurityContext::getAuthentication)
+			.map(Authentication::getPrincipal)
+			.filter(it -> it instanceof SecurityUser)
+			.orElse(null);
+	}
+
+	public boolean isLogin() {
+		return getUser() != null;
+	}
+
+	public boolean isLogout() {
+		return !isLogin();
+	}
+
+	public boolean isAdmin() {
+		if (isLogout()) {
+			return false;
+		}
+
+		return getUser()
+			.getAuthorities().stream()
+			.anyMatch(it -> it.getAuthority().equals("ROLE_ADMIN"));
+	}
+
+	public void setAttribute(String key, Object value) {
+		request.setAttribute(key, value);
+	}
+
+	public String getCurrentQueryStringWithoutParam(String paramName) {
+		String queryString = request.getQueryString();
+
+		if (!StringUtils.hasText(queryString)) {
+			return "";
+		}
+
+		return Ut.url.deleteQueryParam(queryString, paramName);
+	}
+
+	public Member getMember() {
+		if (isLogout()) {
+			return null;
+		}
+
+		if (member == null) {
+			member = AppConfig.getEntityManager().getReference(Member.class, getUser().getId());
+		}
+
+		return member;
 	}
 }
