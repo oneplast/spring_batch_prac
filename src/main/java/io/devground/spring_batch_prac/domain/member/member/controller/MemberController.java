@@ -32,14 +32,16 @@ public class MemberController {
 		@NotBlank
 		String username,
 		@NotBlank
-		String password
+		String password,
+		@NotBlank
+		String nickname
 	) {
 	}
 
 	@PreAuthorize("isAnonymous()")
 	@PostMapping("/join")
 	public String join(@Valid JoinForm joinForm) {
-		RsData<Member> joinRs = memberService.join(joinForm.username, joinForm.password);
+		RsData<Member> joinRs = memberService.join(joinForm.username, joinForm.password, joinForm.nickname);
 
 		return rq.redirectOrBack(joinRs, "/member/login");
 	}
