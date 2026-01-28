@@ -32,6 +32,9 @@ public class SecurityConfig {
 				.defaultSuccessUrl("/?msg=" + URLEncoder.encode("환영합니다.", StandardCharsets.UTF_8))
 				.failureUrl("/member/login?failMsg=" + URLEncoder.encode("아이디 또는 비밀번호가 틀렸습니다", StandardCharsets.UTF_8))
 			)
+			.oauth2Login(o -> o
+				.loginPage("/member/login")
+			)
 			.logout(l -> l
 				.logoutUrl("/member/logout")
 			)
