@@ -61,3 +61,8 @@ custom:
   site:
     name: mb.onep.shop
     baseUrl: "http://localhost:${server.port}"
+
+  temp:
+    dirPath: C:/Users/river/Devcourse/Spring/mb/temp
+  genFile:
+    dirPath: C:/Users/river/Devcourse/Spring/mb

@@ -18,9 +18,24 @@ public class AppConfig {
 	@Getter
 	private static String siteName;
 
+	@Getter
+	private static String tempDirPath;
+	@Getter
+	private static String genFileDirPath;
+
 	@Value("${custom.site.name}")
 	public void setSiteName(String siteName) {
 		AppConfig.siteName = siteName;
+	}
+
+	@Value("${custom.temp.dirPath}")
+	public void setTempDirPath(String tempDirPath) {
+		AppConfig.tempDirPath = tempDirPath;
+	}
+
+	@Value("${custom.genFile.dirPath}")
+	public void setGenFileDirPath(String genFileDirPath) {
+		AppConfig.genFileDirPath = genFileDirPath;
 	}
 
 	@Autowired

@@ -20,6 +20,7 @@ import io.devground.spring_batch_prac.domain.product.product.service.ProductServ
 import lombok.RequiredArgsConstructor;
 
 @Configuration
+@org.springframework.core.annotation.Order(3)
 @RequiredArgsConstructor
 public class NotProd implements ApplicationRunner {
 
