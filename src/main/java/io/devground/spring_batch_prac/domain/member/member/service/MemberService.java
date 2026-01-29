@@ -7,14 +7,17 @@ import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import io.devground.spring_batch_prac.domain.cash.cash.entity.CashLog;
 import io.devground.spring_batch_prac.domain.cash.cash.repository.CashLogRepository;
 import io.devground.spring_batch_prac.domain.cash.cash.service.CashService;
 import io.devground.spring_batch_prac.domain.member.member.entity.Member;
 import io.devground.spring_batch_prac.domain.member.member.repository.MemberRepository;
+import io.devground.spring_batch_prac.global.app.AppConfig;
 import io.devground.spring_batch_prac.global.jpa.BaseEntity;
 import io.devground.spring_batch_prac.global.rsdata.RsData;
+import io.devground.spring_batch_prac.standard.util.Ut;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -68,6 +71,10 @@ public class MemberService {
 	) {
 
 		Optional<Member> opMember = findByUsername(username);
+
+		String filePath = StringUtils.hasText(profileImageUrl)
+			? Ut.file.downloadFileByHttp(profileImageUrl, AppConfig.getTempDirPath())
+			: "";
 
 		return opMember.map(member -> RsData.of(OK.value(), "이미 존재합니다.", member))
 			.orElseGet(() -> join(username, "", nickname));
