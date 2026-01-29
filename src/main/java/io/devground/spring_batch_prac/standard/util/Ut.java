@@ -12,6 +12,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,6 +28,13 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class Ut {
+
+	public static class date {
+		public static String getCurrentDateFormatted(String pattern) {
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+			return simpleDateFormat.format(new Date());
+		}
+	}
 
 	public static class file {
 		private static final String ORIGIN_FILE_NAME_SEPARATOR = "--originFileName__";
