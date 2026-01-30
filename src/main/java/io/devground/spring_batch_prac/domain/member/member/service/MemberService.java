@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import io.devground.spring_batch_prac.domain.base.genFile.service.GenFileService;
 import io.devground.spring_batch_prac.domain.cash.cash.entity.CashLog;
 import io.devground.spring_batch_prac.domain.cash.cash.repository.CashLogRepository;
 import io.devground.spring_batch_prac.domain.cash.cash.service.CashService;
@@ -29,9 +30,15 @@ public class MemberService {
 	private final PasswordEncoder passwordEncoder;
 	private final CashLogRepository cashLogRepository;
 	private final CashService cashService;
+	private final GenFileService genFileService;
 
 	@Transactional
 	public RsData<Member> join(String username, String password, String nickname) {
+		return join(username, password, nickname, null);
+	}
+
+	@Transactional
+	public RsData<Member> join(String username, String password, String nickname, String profileImgFilePath) {
 
 		if (findByUsername(username).isPresent()) {
 			return RsData.of(BAD_REQUEST.value(), "이미 존재하는 회원입니다.");
@@ -44,6 +51,10 @@ public class MemberService {
 			.build();
 
 		memberRepository.save(member);
+
+		if (StringUtils.hasText(profileImgFilePath)) {
+			saveProfileImg(member, profileImgFilePath);
+		}
 
 		return RsData.of(
 			OK.value(),
@@ -77,6 +88,10 @@ public class MemberService {
 			: "";
 
 		return opMember.map(member -> RsData.of(OK.value(), "이미 존재합니다.", member))
-			.orElseGet(() -> join(username, "", nickname));
+			.orElseGet(() -> join(username, "", nickname, filePath));
+	}
+
+	private void saveProfileImg(Member member, String profileImgFilePath) {
+		genFileService.save(member.getModelName(), member.getId(), "common", "profileImg", 1, profileImgFilePath);
 	}
 }
