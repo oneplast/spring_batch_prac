@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import io.devground.spring_batch_prac.domain.base.genFile.entity.GenFile;
 import io.devground.spring_batch_prac.domain.base.genFile.service.GenFileService;
 import io.devground.spring_batch_prac.domain.cash.cash.entity.CashLog;
 import io.devground.spring_batch_prac.domain.cash.cash.repository.CashLogRepository;
@@ -91,7 +92,18 @@ public class MemberService {
 			.orElseGet(() -> join(username, "", nickname, filePath));
 	}
 
+	public String getProfileImgUrl(Member member) {
+		return Optional.ofNullable(member)
+			.flatMap(this::findProfileImgUrl)
+			.orElse("https://placehold.co/30x30?text=UU");
+	}
+
 	private void saveProfileImg(Member member, String profileImgFilePath) {
 		genFileService.save(member.getModelName(), member.getId(), "common", "profileImg", 1, profileImgFilePath);
+	}
+
+	private Optional<String> findProfileImgUrl(Member member) {
+		return genFileService.findBy(member.getModelName(), member.getId(), "common", "profileImg", 1)
+			.map(GenFile::getUrl);
 	}
 }

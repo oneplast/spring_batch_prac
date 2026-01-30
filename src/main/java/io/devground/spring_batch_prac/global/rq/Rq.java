@@ -12,6 +12,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.context.annotation.RequestScope;
 
 import io.devground.spring_batch_prac.domain.member.member.entity.Member;
+import io.devground.spring_batch_prac.domain.member.member.service.MemberService;
 import io.devground.spring_batch_prac.global.app.AppConfig;
 import io.devground.spring_batch_prac.global.rsdata.RsData;
 import io.devground.spring_batch_prac.global.security.SecurityUser;
@@ -27,6 +28,7 @@ public class Rq {
 
 	private final HttpServletRequest request;
 	private final HttpServletResponse response;
+	private final MemberService memberService;
 
 	private Member member;
 
@@ -117,5 +119,9 @@ public class Rq {
 		}
 
 		return member;
+	}
+
+	public String getProfileImgUrl() {
+		return memberService.getProfileImgUrl(getMember());
 	}
 }
