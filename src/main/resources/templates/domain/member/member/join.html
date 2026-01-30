@@ -55,25 +55,25 @@
     <form th:action method="POST" onsubmit="submitJoinForm(this); return false;">
         <div>
             <label>사용자 ID</label>
-            <input type="text" name="username"/>
+            <input class="input input-bordered" type="text" name="username"/>
         </div>
 
         <div>
             <label>비밀번호</label>
-            <input type="password" name="password"/>
+            <input class="input input-bordered" type="password" name="password"/>
         </div>
 
         <div>
             <label>비밀번호 확인</label>
-            <input type="password" name="passwordConfirm"/>
+            <input class="input input-bordered" type="password" name="passwordConfirm"/>
         </div>
 
         <div>
             <label>별명</label>
-            <input type="text" name="nickname"/>
+            <input class="input input-bordered" type="text" name="nickname"/>
         </div>
 
-        <button type="submit">회원가입</button>
+        <button class="btn btn-primary" type="submit">회원가입</button>
     </form>
 </div>
 </body>
