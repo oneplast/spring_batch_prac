@@ -69,25 +69,25 @@ public class GenFileService {
 			try {
 				if (fileNo == 0) {
 					fileNo = genNextFileNo(relTypeCode, relId, typeCode, type2Code);
-
-					genFile = GenFile.builder()
-						.relTypeCode(relTypeCode)
-						.relId(relId)
-						.typeCode(typeCode)
-						.type2Code(type2Code)
-						.fileExtTypeCode(fileExtTypeCode)
-						.fileExtType2Code(fileExtType2Code)
-						.originFileName(originFileName)
-						.fileSize(fileSize)
-						.fileNo(fileNo)
-						.fileExt(fileExt)
-						.fileDir(fileDir)
-						.build();
-
-					genFileRepository.save(genFile);
-
-					break;
 				}
+
+				genFile = GenFile.builder()
+					.relTypeCode(relTypeCode)
+					.relId(relId)
+					.typeCode(typeCode)
+					.type2Code(type2Code)
+					.fileExtTypeCode(fileExtTypeCode)
+					.fileExtType2Code(fileExtType2Code)
+					.originFileName(originFileName)
+					.fileSize(fileSize)
+					.fileNo(fileNo)
+					.fileExt(fileExt)
+					.fileDir(fileDir)
+					.build();
+
+				genFileRepository.save(genFile);
+
+				break;
 			} catch (Exception ignored) {
 			}
 		}
