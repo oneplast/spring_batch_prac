@@ -1,6 +1,7 @@
 package io.devground.spring_batch_prac.domain.product.order.entity;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,6 +60,22 @@ public class Order extends BaseEntity {
 
 	public long calcPayPrice() {
 		return orderItems.stream().mapToLong(OrderItem::getPayPrice).sum();
+	}
+
+	public String getName() {
+		String name = orderItems.getFirst().getProduct().getName();
+
+		if (orderItems.size() > 1) {
+			name += "외 %d건".formatted(orderItems.size() - 1);
+		}
+
+		return name;
+	}
+
+	public String getCode() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+		return getCreateDate().format(formatter) + "__" + getId();
 	}
 
 	public void setPaymentDone() {
