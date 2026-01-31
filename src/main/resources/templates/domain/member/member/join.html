@@ -52,7 +52,7 @@
         }
     </script>
 
-    <form th:action method="POST" onsubmit="submitJoinForm(this); return false;">
+    <form th:action method="POST" enctype="multipart/form-data" onsubmit="submitJoinForm(this); return false;">
         <div>
             <label>사용자 ID</label>
             <input class="input input-bordered" type="text" name="username"/>
@@ -71,6 +71,12 @@
         <div>
             <label>별명</label>
             <input class="input input-bordered" type="text" name="nickname"/>
+        </div>
+
+        <div>
+            <label>프로필 이미지</label>
+            <input class="file-input file-input-bordered" type="file" name="profileImg"
+                   accept="image/jpeg, image/png, image/gif"/>
         </div>
 
         <button class="btn btn-primary" type="submit">회원가입</button>
