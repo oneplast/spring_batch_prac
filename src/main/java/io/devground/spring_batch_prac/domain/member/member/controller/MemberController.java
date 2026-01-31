@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import io.devground.spring_batch_prac.domain.member.member.entity.Member;
 import io.devground.spring_batch_prac.domain.member.member.service.MemberService;
@@ -34,14 +35,16 @@ public class MemberController {
 		@NotBlank
 		String password,
 		@NotBlank
-		String nickname
+		String nickname,
+		MultipartFile profileImg
 	) {
 	}
 
 	@PreAuthorize("isAnonymous()")
 	@PostMapping("/join")
 	public String join(@Valid JoinForm joinForm) {
-		RsData<Member> joinRs = memberService.join(joinForm.username, joinForm.password, joinForm.nickname);
+		RsData<Member> joinRs =
+			memberService.join(joinForm.username, joinForm.password, joinForm.nickname, joinForm.profileImg);
 
 		return rq.redirectOrBack(joinRs, "/member/login");
 	}

@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import io.devground.spring_batch_prac.domain.base.genFile.entity.GenFile;
 import io.devground.spring_batch_prac.domain.base.genFile.service.GenFileService;
@@ -35,7 +36,14 @@ public class MemberService {
 
 	@Transactional
 	public RsData<Member> join(String username, String password, String nickname) {
-		return join(username, password, nickname, null);
+		return join(username, password, nickname, "");
+	}
+
+	@Transactional
+	public RsData<Member> join(String username, String password, String nickname, MultipartFile profileImg) {
+		String profileImgFilePath = Ut.file.toFile(profileImg, AppConfig.getTempDirPath());
+
+		return join(username, password, nickname, profileImgFilePath);
 	}
 
 	@Transactional

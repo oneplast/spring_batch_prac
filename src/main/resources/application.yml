@@ -47,6 +47,11 @@ spring:
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
 
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: ${spring.servlet.multipart.max-file-size}
+
 logging:
   level:
     io.devground.spring_batch_prac: DEBUG

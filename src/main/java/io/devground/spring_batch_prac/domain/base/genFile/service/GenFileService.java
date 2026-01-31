@@ -97,7 +97,6 @@ public class GenFileService {
 		file.getParentFile().mkdirs();
 
 		Ut.file.moveFile(sourceFilePath, file);
-		Ut.file.remove(sourceFilePath);
 
 		return genFile;
 	}
