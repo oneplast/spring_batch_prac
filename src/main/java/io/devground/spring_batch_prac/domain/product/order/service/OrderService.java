@@ -4,6 +4,7 @@ import static io.devground.spring_batch_prac.domain.cash.cash.entity.CashLog.Eve
 import static org.springframework.http.HttpStatus.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -104,5 +105,13 @@ public class OrderService {
 		long restCash = order.getBuyer().getRestCash();
 
 		return order.calcPayPrice() <= restCash + pgPayPrice;
+	}
+
+	public Optional<Order> findById(long id) {
+		return orderRepository.findById(id);
+	}
+
+	public boolean actorCanSee(Member actor, Order order) {
+		return order.getBuyer().equals(actor);
 	}
 }

@@ -50,6 +50,7 @@ public class NotProd implements ApplicationRunner {
 		Member memberUser1 = memberService.join("user1", "1234", "유저1").getData();
 		Member memberUser2 = memberService.join("user2", "1234", "유저2").getData();
 		Member memberUser3 = memberService.join("user3", "1234", "유저3").getData();
+		Member memberUser4 = memberService.join("user4", "1234", "유저4").getData();
 
 		Book book1 = bookService.createBook(memberUser1, "책 제목 1", "책 내용 1", 10_000);
 		Book book2 = bookService.createBook(memberUser2, "책 제목 2", "책 내용 2", 20_000);
@@ -95,6 +96,14 @@ public class NotProd implements ApplicationRunner {
 		Order order3 = orderService.createOrder(memberUser2);
 		orderService.checkCanPay(order3, 55_000);
 		orderService.payByTossPayments(order3, 55_000);
+
+		memberService.addCash(memberUser4, 50_000, CashLog.EventType.충전__무통장입금, memberUser4);
+
+		cartService.addItem(memberUser4, product1);
+		cartService.addItem(memberUser4, product2);
+		cartService.addItem(memberUser4, product3);
+
+		Order order4 = orderService.createOrder(memberUser4);
 	}
 
 	@Transactional
