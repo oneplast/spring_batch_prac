@@ -71,3 +71,6 @@ custom:
     dirPath: C:/Users/river/Devcourse/Spring/mb/temp
   genFile:
     dirPath: C:/Users/river/Devcourse/Spring/mb
+
+  toss-payments:
+    targetUrl: https://api.tosspayments.com/v1/payments/confirm

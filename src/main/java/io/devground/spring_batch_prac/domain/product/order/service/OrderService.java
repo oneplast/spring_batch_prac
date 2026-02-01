@@ -81,6 +81,13 @@ public class OrderService {
 		payDone(order);
 	}
 
+	public void payDone(String code) {
+		Order order = findByCode(code)
+			.orElseThrow(() -> new GlobalException(BAD_REQUEST.value(), "존재하지 않는 주문입니다."));
+
+		payDone(order);
+	}
+
 	public void payDone(Order order) {
 		order.setPaymentDone();
 	}
@@ -93,6 +100,13 @@ public class OrderService {
 
 		order.setCancelDate();
 		order.setRefundDate();
+	}
+
+	public void checkCanPay(String orderCode, long pgPayPrice) {
+		Order order = findByCode(orderCode)
+			.orElseThrow(() -> new GlobalException(BAD_REQUEST.value(), "존재하지 않는 주문입니다."));
+
+		checkCanPay(order, pgPayPrice);
 	}
 
 	public void checkCanPay(Order order, long pgPayPrice) {
@@ -113,5 +127,11 @@ public class OrderService {
 
 	public boolean actorCanSee(Member actor, Order order) {
 		return order.getBuyer().equals(actor);
+	}
+
+	private Optional<Order> findByCode(String code) {
+		long id = Long.parseLong(code.split("__", 2)[1]);
+
+		return findById(id);
 	}
 }

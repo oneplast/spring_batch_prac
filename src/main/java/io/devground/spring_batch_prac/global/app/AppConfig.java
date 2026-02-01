@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.persistence.EntityManager;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +18,20 @@ public class AppConfig {
 	private static EntityManager entityManager;
 
 	@Getter
+	private static ObjectMapper objectMapper;
+
+	@Getter
 	private static String siteName;
 
 	@Getter
 	private static String tempDirPath;
 	@Getter
 	private static String genFileDirPath;
+
+	@Getter
+	private static String tossPaymentsWidgetSecretKey;
+	@Getter
+	private static String tossPaymentsTargetUrl;
 
 	@Value("${custom.site.name}")
 	public void setSiteName(String siteName) {
@@ -38,8 +48,23 @@ public class AppConfig {
 		AppConfig.genFileDirPath = genFileDirPath;
 	}
 
+	@Value("${custom.toss-payments.widget.secret-key}")
+	public void setTossPaymentsWidgetSecretKey(String tossPaymentsWidgetSecretKey) {
+		AppConfig.tossPaymentsWidgetSecretKey = tossPaymentsWidgetSecretKey;
+	}
+
+	@Value("${custom.toss-payments.targetUrl}")
+	public void setTossPaymentsTargetUrl(String tossPaymentsTargetUrl) {
+		AppConfig.tossPaymentsTargetUrl = tossPaymentsTargetUrl;
+	}
+
 	@Autowired
 	public void setEntityManager(EntityManager entityManager) {
 		AppConfig.entityManager = entityManager;
+	}
+
+	@Autowired
+	public void setObjectMapper(ObjectMapper objectMapper) {
+		AppConfig.objectMapper = objectMapper;
 	}
 }
