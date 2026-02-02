@@ -146,4 +146,8 @@ public class OrderService {
 
 		return findById(id);
 	}
+
+	public List<Order> findByBuyer(Member buyer) {
+		return orderRepository.findByBuyerOrderByIdDesc(buyer);
+	}
 }

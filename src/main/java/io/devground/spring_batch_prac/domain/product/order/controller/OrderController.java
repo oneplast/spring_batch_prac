@@ -4,6 +4,7 @@ import static java.nio.charset.StandardCharsets.*;
 import static org.springframework.http.HttpStatus.*;
 
 import java.util.Base64;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpEntity;
@@ -44,6 +45,16 @@ public class OrderController {
 	private final Rq rq;
 	private final RestTemplate restTemplate;
 
+	@GetMapping("/myList")
+	@PreAuthorize("isAuthenticated()")
+	public String showMyList() {
+		List<Order> orders = orderService.findByBuyer(rq.getMember());
+
+		rq.setAttribute("orders", orders);
+
+		return "domain/product/order/myList";
+	}
+
 	@GetMapping("/{id}")
 	@PreAuthorize("isAuthenticated()")
 	public String showDetail(@PathVariable long id, Model model) {
@@ -62,6 +73,20 @@ public class OrderController {
 		model.addAttribute("actorRestCash", restCash);
 
 		return "domain/product/order/detail";
+	}
+
+	@PostMapping("/{id}/payByCash")
+	public String payByCash(@PathVariable long id) {
+		Order order = orderService.findById(id)
+			.orElseThrow(() -> new GlobalException(NOT_FOUND.value(), "존재하지 않는 주문입니다."));
+
+		if (!orderService.canPay(order, 0)) {
+			throw new GlobalException(FORBIDDEN.value(), "권한이 없습니다.");
+		}
+
+		orderService.payByCashOnly(order);
+
+		return rq.redirect("/order/" + order.getId(), "결제가 완료되었습니다.");
 	}
 
 	@GetMapping("/success")

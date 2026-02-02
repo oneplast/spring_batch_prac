@@ -41,6 +41,7 @@ public class Order extends BaseEntity {
 
 	@Builder.Default
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+	@ToString.Include
 	private List<OrderItem> orderItems = new ArrayList<>();
 
 	private LocalDateTime payDate;
@@ -82,6 +83,30 @@ public class Order extends BaseEntity {
 				? "-test-" + UUID.randomUUID()
 				: ""
 		) + "__" + getId();
+	}
+
+	public String getForPrintPayStatus() {
+		if (payDate == null) {
+			return "결제대기";
+		}
+
+		return "결제완료(" + payDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + ")";
+	}
+
+	public String getForPrintCancelStatus() {
+		if (cancelDate == null) {
+			return "취소가능";
+		}
+
+		return "취소완료(" + cancelDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + ")";
+	}
+
+	public String getForPrintRefundStatus() {
+		if (refundDate == null) {
+			return "환불가능";
+		}
+
+		return "환불완료(" + refundDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + ")";
 	}
 
 	public void setPaymentDone() {
