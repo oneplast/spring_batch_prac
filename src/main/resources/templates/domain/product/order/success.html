@@ -52,10 +52,14 @@
 
         if (!response.ok) {
             console.log(json);
-            window.location.href = `/order/fail?message=${json.message}&code=${json.code}`;
+            location.replace(`/order/fail?message=${json.message}&code=${json.code}`);
+
+            return;
         }
 
-        console.log(json);
+        const id = urlParams.get("orderId").split("__")[1];
+
+        location.replace(`/order/${id}?msg=결제가 완료되었습니다.`)
     }
 
     confirm();
