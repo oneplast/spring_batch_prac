@@ -4,11 +4,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 
 import io.devground.spring_batch_prac.domain.member.member.entity.Member;
 import io.devground.spring_batch_prac.domain.product.cart.entity.CartItem;
+import io.devground.spring_batch_prac.global.app.AppConfig;
 import io.devground.spring_batch_prac.global.exception.GlobalException;
 import io.devground.spring_batch_prac.global.jpa.BaseEntity;
 import jakarta.persistence.CascadeType;
@@ -75,7 +77,11 @@ public class Order extends BaseEntity {
 	public String getCode() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-		return getCreateDate().format(formatter) + "__" + getId();
+		return getCreateDate().format(formatter) + (
+			AppConfig.isNotProd()
+				? "-test-" + UUID.randomUUID()
+				: ""
+		) + "__" + getId();
 	}
 
 	public void setPaymentDone() {

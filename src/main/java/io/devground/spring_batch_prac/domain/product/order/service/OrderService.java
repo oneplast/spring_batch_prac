@@ -59,6 +59,13 @@ public class OrderService {
 		payDone(order);
 	}
 
+	public void payByTossPayments(String orderId, long pgPayPrice) {
+		Order order = findByCode(orderId)
+			.orElseThrow(() -> new GlobalException(BAD_REQUEST.value(), "존재하지 않는 주문입니다."));
+
+		payByTossPayments(order, pgPayPrice);
+	}
+
 	@Transactional
 	public void payByTossPayments(Order order, long pgPayPrice) {
 		Member buyer = order.getBuyer();
@@ -129,7 +136,7 @@ public class OrderService {
 		return order.getBuyer().equals(actor);
 	}
 
-	private Optional<Order> findByCode(String code) {
+	public Optional<Order> findByCode(String code) {
 		long id = Long.parseLong(code.split("__", 2)[1]);
 
 		return findById(id);

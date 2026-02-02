@@ -112,7 +112,7 @@ public class OrderController {
 				String.class
 			);
 
-			orderService.payDone(request.orderId);
+			orderService.payByTossPayments(request.orderId, request.amount);
 		} catch (HttpStatusCodeException e) {
 			throw new RuntimeException("결제 승인에 실패하였습니다.");
 		}

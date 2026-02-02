@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AppConfig {
 
+	private static String activeProfile;
+
 	@Getter
 	private static EntityManager entityManager;
 
@@ -32,6 +34,11 @@ public class AppConfig {
 	private static String tossPaymentsWidgetSecretKey;
 	@Getter
 	private static String tossPaymentsTargetUrl;
+
+	@Value("${spring.profiles.active}")
+	public void setActiveProfile(String value) {
+		AppConfig.activeProfile = value;
+	}
 
 	@Value("${custom.site.name}")
 	public void setSiteName(String siteName) {
@@ -66,5 +73,13 @@ public class AppConfig {
 	@Autowired
 	public void setObjectMapper(ObjectMapper objectMapper) {
 		AppConfig.objectMapper = objectMapper;
+	}
+
+	public static boolean isNotProd() {
+		return !isProd();
+	}
+
+	public static boolean isProd() {
+		return activeProfile.equals("prod");
 	}
 }
