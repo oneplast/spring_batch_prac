@@ -59,6 +59,7 @@ public class OrderService {
 		payDone(order);
 	}
 
+	@Transactional
 	public void payByTossPayments(String orderId, long pgPayPrice) {
 		Order order = findByCode(orderId)
 			.orElseThrow(() -> new GlobalException(BAD_REQUEST.value(), "존재하지 않는 주문입니다."));
