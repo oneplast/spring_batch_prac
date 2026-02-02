@@ -26,125 +26,130 @@
         <div>주문자: [[${order.buyer.username}]]</div>
         <div>주문상품: [[${order.name}]]</div>
         <div>결제금액: [[${order.calcPayPrice}]]</div>
+        <div>결제상태: [[${order.payDate}]]</div>
+        <div>취소상태: [[${order.cancelDate}]]</div>
+        <div>환불상태: [[${order.refundDate}]]</div>
     </div>
 
-    <!-- 결제 UI -->
-    <div id="payment-method"></div>
+    <th:block th:if="${order.payable}">
+        <!-- 결제 UI -->
+        <div id="payment-method"></div>
 
-    <!-- 이용약관 UI -->
-    <div id="agreement"></div>
+        <!-- 이용약관 UI -->
+        <div id="agreement"></div>
 
-    <!-- 결제하기 버튼 -->
-    <form onsubmit="submitPayForm(this); return false;">
-        <div>
-            <label>고객 이메일</label>
-            <input class="input-bordered" type="email" name="customerEmail" placeholder="customer@email.com"
-                   value="test@test.com"/>
-        </div>
+        <!-- 결제하기 버튼 -->
+        <form onsubmit="submitPayForm(this); return false;">
+            <div>
+                <label>고객 이메일</label>
+                <input class="input-bordered" type="email" name="customerEmail" placeholder="customer@email.com"
+                       value="test@test.com"/>
+            </div>
 
-        <div>
-            <label>고객 이름(실명)</label>
-            <input class="input-bordered" name="customerName" type="text" placeholder="홍길동" value="홍길동"/>
-        </div>
+            <div>
+                <label>고객 이름(실명)</label>
+                <input class="input-bordered" name="customerName" type="text" placeholder="홍길동" value="홍길동"/>
+            </div>
 
-        <div>
-            <label>고객 휴대전화번호(- 제외)</label>
-            <input class="input-bordered" name="customerMobilePhone" type="text" placeholder="01012341234"
-                   value="01012341234"/>
-        </div>
+            <div>
+                <label>고객 휴대전화번호(- 제외)</label>
+                <input class="input-bordered" name="customerMobilePhone" type="text" placeholder="01012341234"
+                       value="01012341234"/>
+            </div>
 
-        <div>
-            <label>캐시</label>
-            <input class="input-bordered" name="useCash" type="number" placeholder="0 ~ ?"/>
-        </div>
+            <div>
+                <label>캐시</label>
+                <input class="input-bordered" name="useCash" type="number" placeholder="0 ~ ?"/>
+            </div>
 
-        <div class="result wrapper">
-            <button class="btn btn-primary" type="submit" id="payment-button">
-                결제하기
-            </button>
-        </div>
-    </form>
+            <div class="result wrapper">
+                <button class="btn btn-primary" type="submit" id="payment-button">
+                    결제하기
+                </button>
+            </div>
+        </form>
 
-    <script>
+        <script>
 
-        let widgets;
-        const amount = orderPayPrice;
+            let widgets;
+            const amount = orderPayPrice;
 
-        (async () => {
-            const tossPayments = TossPayments(toss_clientKey);
-            const customerKey = buyerUsername;
+            (async () => {
+                const tossPayments = TossPayments(toss_clientKey);
+                const customerKey = buyerUsername;
 
-            widgets = tossPayments.widgets({customerKey});
+                widgets = tossPayments.widgets({customerKey});
 
-            await widgets.setAmount({
-                currency: "KRW",
-                value: amount,
-            });
+                await widgets.setAmount({
+                    currency: "KRW",
+                    value: amount,
+                });
 
-            await widgets.renderPaymentMethods({
-                selector: "#payment-method",
-                variantKey: "DEFAULT",
-            });
+                await widgets.renderPaymentMethods({
+                    selector: "#payment-method",
+                    variantKey: "DEFAULT",
+                });
 
-            await widgets.renderAgreement({
-                selector: "#agreement",
-                variantKey: "AGREEMENT",
-            });
-        })();
+                await widgets.renderAgreement({
+                    selector: "#agreement",
+                    variantKey: "AGREEMENT",
+                });
+            })();
 
-        async function submitPayForm(form) {
-            if (!widgets) {
-                alert("결제 위젯 준비 중입니다. 잠시만 기다려주세요.");
-                return;
+            async function submitPayForm(form) {
+                if (!widgets) {
+                    alert("결제 위젯 준비 중입니다. 잠시만 기다려주세요.");
+                    return;
+                }
+
+                form.customerEmail.value = form.customerEmail.value.trim();
+
+                if (form.customerEmail.value.length === 0) {
+                    toastWarning("고객 이메일을 입력해주세요.");
+                    form.customerEmail.focus();
+
+                    return;
+                }
+
+                form.customerName.value = form.customerName.value.trim();
+
+                if (form.customerName.value.length === 0) {
+                    toastWarning("고객 이름(실명)을 입력해주세요.");
+                    form.customerName.focus();
+
+                    return;
+                }
+
+                form.customerMobilePhone.value = form.customerMobilePhone.value.trim();
+
+                if (form.customerMobilePhone.value.length === 0) {
+                    toastWarning("고객 휴대전화번호를 입력해주세요.");
+                    form.customerMobilePhone.focus();
+
+                    return;
+                }
+
+                form.useCash.value = form.useCash.value.trim();
+
+                const useCash = form.useCash.valueAsNumber || 0;
+
+                await widgets.setAmount({
+                    currency: "KRW",
+                    value: amount - useCash,
+                });
+
+                await widgets.requestPayment({
+                    orderId: orderCode,
+                    orderName: orderName,
+                    successUrl: window.location.origin + "/order/success",
+                    failUrl: window.location.origin + "/order/fail",
+                    customerEmail: form.customerEmail.value,
+                    customerName: form.customerName.value,
+                    customerMobilePhone: form.customerMobilePhone.value,
+                });
             }
-
-            form.customerEmail.value = form.customerEmail.value.trim();
-
-            if (form.customerEmail.value.length === 0) {
-                toastWarning("고객 이메일을 입력해주세요.");
-                form.customerEmail.focus();
-
-                return;
-            }
-
-            form.customerName.value = form.customerName.value.trim();
-
-            if (form.customerName.value.length === 0) {
-                toastWarning("고객 이름(실명)을 입력해주세요.");
-                form.customerName.focus();
-
-                return;
-            }
-
-            form.customerMobilePhone.value = form.customerMobilePhone.value.trim();
-
-            if (form.customerMobilePhone.value.length === 0) {
-                toastWarning("고객 휴대전화번호를 입력해주세요.");
-                form.customerMobilePhone.focus();
-
-                return;
-            }
-
-            form.useCash.value = form.useCash.value.trim();
-
-            const useCash = form.useCash.valueAsNumber || 0;
-
-            await widgets.setAmount({
-                currency: "KRW",
-                value: amount - useCash,
-            });
-
-            await widgets.requestPayment({
-                orderId: orderCode,
-                orderName: orderName,
-                successUrl: window.location.origin + "/order/success",
-                failUrl: window.location.origin + "/order/fail",
-                customerEmail: form.customerEmail.value,
-                customerName: form.customerName.value,
-                customerMobilePhone: form.customerMobilePhone.value,
-            });
-        }
-    </script>
+        </script>
+    </th:block>
 </div>
 
 </body>
