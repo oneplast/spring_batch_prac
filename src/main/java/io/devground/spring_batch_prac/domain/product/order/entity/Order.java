@@ -101,4 +101,12 @@ public class Order extends BaseEntity {
 
 		orderItems.forEach(OrderItem::setRefundDone);
 	}
+
+	public boolean isPayable() {
+		if (payDate != null) {
+			return false;
+		}
+
+		return cancelDate == null;
+	}
 }

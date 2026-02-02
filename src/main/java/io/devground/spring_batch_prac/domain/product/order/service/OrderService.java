@@ -124,6 +124,10 @@ public class OrderService {
 	}
 
 	public boolean canPay(Order order, long pgPayPrice) {
+		if (!order.isPayable()) {
+			return false;
+		}
+
 		long restCash = order.getBuyer().getRestCash();
 
 		return order.calcPayPrice() <= restCash + pgPayPrice;
