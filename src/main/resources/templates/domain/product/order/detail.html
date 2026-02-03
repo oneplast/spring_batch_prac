@@ -26,9 +26,9 @@
         <div>주문자: [[${order.buyer.username}]]</div>
         <div>주문상품: [[${order.name}]]</div>
         <div>결제금액: [[${order.calcPayPrice}]]</div>
-        <div>결제상태: [[${order.payDate}]]</div>
-        <div>취소상태: [[${order.cancelDate}]]</div>
-        <div>환불상태: [[${order.refundDate}]]</div>
+        <div>결제상태: [[${order.forPrintPayStatus}]]</div>
+        <div>취소상태: [[${order.forPrintCancelStatus}]]</div>
+        <div>환불상태: [[${order.forPrintRefundStatus}]]</div>
     </div>
 
     <th:block th:if="${order.payable}">
@@ -39,7 +39,7 @@
         <div id="agreement"></div>
 
         <!-- 결제하기 버튼 -->
-        <form onsubmit="submitPayForm(this); return false;">
+        <form method="POST" th:action="|/order/${order.id}/payByCash|" onsubmit="submitPayForm(this); return false;">
             <div>
                 <label>고객 이메일</label>
                 <input class="input-bordered" type="email" name="customerEmail" placeholder="customer@email.com"
@@ -59,7 +59,11 @@
 
             <div>
                 <label>캐시</label>
-                <input class="input-bordered" name="useCash" type="number" placeholder="0 ~ ?"/>
+                <input class="input-bordered" name="useCash" type="number"
+                       th:max-cash="${order.calcPayPrice > actorRestCash ? actorRestCash : order.calcPayPrice}"
+                       th:placehoder="${'0 ~ ' + (order.calcPayPrice > actorRestCash ? actorRestCash : order.calcPayPrice)}"
+                />
+                <button type="button" onclick="$(this).prev().val($(this).prev().attr('max-cash'))">전액</button>
             </div>
 
             <div class="result wrapper">
@@ -73,6 +77,7 @@
 
             let widgets;
             const amount = orderPayPrice;
+            let submitPayFormDone = false;
 
             (async () => {
                 const tossPayments = TossPayments(toss_clientKey);
@@ -97,6 +102,10 @@
             })();
 
             async function submitPayForm(form) {
+                if (submitPayFormDone) {
+                    return;
+                }
+
                 if (!widgets) {
                     alert("결제 위젯 준비 중입니다. 잠시만 기다려주세요.");
                     return;
@@ -132,6 +141,12 @@
                 form.useCash.value = form.useCash.value.trim();
 
                 const useCash = form.useCash.valueAsNumber || 0;
+
+                if (amount - useCash === 0) {
+                    form.submit();
+                    submitPayFormDone = true;
+                    return;
+                }
 
                 await widgets.setAmount({
                     currency: "KRW",
