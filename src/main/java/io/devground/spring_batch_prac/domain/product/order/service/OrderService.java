@@ -16,6 +16,7 @@ import io.devground.spring_batch_prac.domain.product.cart.service.CartService;
 import io.devground.spring_batch_prac.domain.product.order.entity.Order;
 import io.devground.spring_batch_prac.domain.product.order.repository.OrderRepository;
 import io.devground.spring_batch_prac.global.exception.GlobalException;
+import io.devground.spring_batch_prac.standard.util.Ut;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -148,6 +149,20 @@ public class OrderService {
 	}
 
 	public List<Order> findByBuyer(Member buyer) {
+		return orderRepository.findByBuyerOrderByIdDesc(buyer);
+	}
+
+	public List<Order> findByBuyerAndPayStatusAndCancelStatusAndRefundStatus(
+		Member buyer, Boolean payStatus, Boolean cancelStatus, Boolean refundStatus
+	) {
+		if (Ut.match.isTrue(payStatus) && cancelStatus == null && refundStatus == null) {
+			return orderRepository.findByBuyerAndPayDateIsNotNullOrderByIdDesc(buyer);
+		} else if (Ut.match.isTrue(cancelStatus) && payStatus == null && refundStatus == null) {
+			return orderRepository.findByBuyerAndCancelDateIsNotNullOrderByIdDesc(buyer);
+		} else if (Ut.match.isTrue(refundStatus) && payStatus == null && cancelStatus == null) {
+			return orderRepository.findByBuyerAndRefundDateIsNotNullOrderByIdDesc(buyer);
+		}
+
 		return orderRepository.findByBuyerOrderByIdDesc(buyer);
 	}
 }

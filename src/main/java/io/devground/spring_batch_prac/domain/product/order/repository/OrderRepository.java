@@ -10,4 +10,10 @@ import io.devground.spring_batch_prac.domain.product.order.entity.Order;
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
 	List<Order> findByBuyerOrderByIdDesc(Member buyer);
+
+	List<Order> findByBuyerAndPayDateIsNotNullOrderByIdDesc(Member buyer);
+
+	List<Order> findByBuyerAndCancelDateIsNotNullOrderByIdDesc(Member buyer);
+
+	List<Order> findByBuyerAndRefundDateIsNotNullOrderByIdDesc(Member buyer);
 }

@@ -47,8 +47,10 @@ public class OrderController {
 
 	@GetMapping("/myList")
 	@PreAuthorize("isAuthenticated()")
-	public String showMyList() {
-		List<Order> orders = orderService.findByBuyer(rq.getMember());
+	public String showMyList(Boolean payStatus, Boolean cancelStatus, Boolean refundStatus) {
+		List<Order> orders = orderService.findByBuyerAndPayStatusAndCancelStatusAndRefundStatus(
+			rq.getMember(), payStatus, cancelStatus, refundStatus
+		);
 
 		rq.setAttribute("orders", orders);
 

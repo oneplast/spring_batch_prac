@@ -261,4 +261,14 @@ public class Ut {
 			return url.substring(0, startPoint) + urlAfter;
 		}
 	}
+
+	public static class match {
+		public static boolean isTrue(Boolean bool) {
+			return bool != null && bool;
+		}
+
+		public static boolean isFalse(Boolean bool) {
+			return bool != null && !bool;
+		}
+	}
 }
