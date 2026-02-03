@@ -6,6 +6,8 @@ import static org.springframework.http.HttpStatus.*;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +18,6 @@ import io.devground.spring_batch_prac.domain.product.cart.service.CartService;
 import io.devground.spring_batch_prac.domain.product.order.entity.Order;
 import io.devground.spring_batch_prac.domain.product.order.repository.OrderRepository;
 import io.devground.spring_batch_prac.global.exception.GlobalException;
-import io.devground.spring_batch_prac.standard.util.Ut;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -148,21 +149,9 @@ public class OrderService {
 		return findById(id);
 	}
 
-	public List<Order> findByBuyer(Member buyer) {
-		return orderRepository.findByBuyerOrderByIdDesc(buyer);
-	}
-
-	public List<Order> findByBuyerAndPayStatusAndCancelStatusAndRefundStatus(
-		Member buyer, Boolean payStatus, Boolean cancelStatus, Boolean refundStatus
+	public Page<Order> search(
+		Member buyer, Boolean payStatus, Boolean cancelStatus, Boolean refundStatus, Pageable pageable
 	) {
-		if (Ut.match.isTrue(payStatus) && cancelStatus == null && refundStatus == null) {
-			return orderRepository.findByBuyerAndPayDateIsNotNullOrderByIdDesc(buyer);
-		} else if (Ut.match.isTrue(cancelStatus) && payStatus == null && refundStatus == null) {
-			return orderRepository.findByBuyerAndCancelDateIsNotNullOrderByIdDesc(buyer);
-		} else if (Ut.match.isTrue(refundStatus) && payStatus == null && cancelStatus == null) {
-			return orderRepository.findByBuyerAndRefundDateIsNotNullOrderByIdDesc(buyer);
-		}
-
-		return orderRepository.findByBuyerOrderByIdDesc(buyer);
+		return orderRepository.search(buyer, payStatus, cancelStatus, refundStatus, pageable);
 	}
 }

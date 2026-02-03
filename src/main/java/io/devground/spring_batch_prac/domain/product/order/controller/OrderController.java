@@ -3,10 +3,15 @@ package io.devground.spring_batch_prac.domain.product.order.controller;
 import static java.nio.charset.StandardCharsets.*;
 import static org.springframework.http.HttpStatus.*;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -20,6 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
@@ -47,12 +53,20 @@ public class OrderController {
 
 	@GetMapping("/myList")
 	@PreAuthorize("isAuthenticated()")
-	public String showMyList(Boolean payStatus, Boolean cancelStatus, Boolean refundStatus) {
-		List<Order> orders = orderService.findByBuyerAndPayStatusAndCancelStatusAndRefundStatus(
-			rq.getMember(), payStatus, cancelStatus, refundStatus
-		);
+	public String showMyList(
+		@RequestParam(defaultValue = "1") int page,
+		Boolean payStatus,
+		Boolean cancelStatus,
+		Boolean refundStatus
+	) {
+		List<Sort.Order> sorts = new ArrayList<>();
 
-		rq.setAttribute("orders", orders);
+		sorts.add(Sort.Order.desc("id"));
+		Pageable pageable = PageRequest.of(page - 1, 50, Sort.by(sorts));
+
+		Page<Order> orderPage = orderService.search(rq.getMember(), payStatus, cancelStatus, refundStatus, pageable);
+
+		rq.setAttribute("orderPage", orderPage);
 
 		return "domain/product/order/myList";
 	}
