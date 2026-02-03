@@ -94,6 +94,10 @@ public class Order extends BaseEntity {
 	}
 
 	public String getForPrintCancelStatus() {
+		if (!isCancelable()) {
+			return "취소불가능";
+		}
+
 		if (cancelDate == null) {
 			return "취소가능";
 		}
@@ -102,6 +106,14 @@ public class Order extends BaseEntity {
 	}
 
 	public String getForPrintRefundStatus() {
+		if (payDate == null) {
+			return "-";
+		}
+
+		if (!isCancelable()) {
+			return "-";
+		}
+
 		if (refundDate == null) {
 			return "환불가능";
 		}
@@ -133,5 +145,17 @@ public class Order extends BaseEntity {
 		}
 
 		return cancelDate == null;
+	}
+
+	public boolean isPayDone() {
+		return payDate != null;
+	}
+
+	public boolean isCancelable() {
+		if (cancelDate != null) {
+			return false;
+		}
+
+		return payDate == null || !payDate.plusHours(1).isBefore(LocalDateTime.now());
 	}
 }

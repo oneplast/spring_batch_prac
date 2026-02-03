@@ -51,6 +51,7 @@ public class NotProd implements ApplicationRunner {
 		Member memberUser2 = memberService.join("user2", "1234", "유저2").getData();
 		Member memberUser3 = memberService.join("user3", "1234", "유저3").getData();
 		Member memberUser4 = memberService.join("user4", "1234", "유저4").getData();
+		Member memberUser5 = memberService.join("user5", "1234", "유저5").getData();
 
 		Book book1 = bookService.createBook(memberUser1, "책 제목 1", "책 내용 1", 10_000);
 		Book book2 = bookService.createBook(memberUser2, "책 제목 2", "책 내용 2", 20_000);
@@ -89,7 +90,7 @@ public class NotProd implements ApplicationRunner {
 
 		Order order2 = orderService.createOrder(memberUser3);
 		orderService.payByCashOnly(order2);
-		orderService.refund(order2);
+		orderService.cancel(order2);
 
 		memberService.addCash(memberUser2, 150_000, CashLog.EventType.충전__무통장입금, memberUser2);
 
@@ -104,6 +105,19 @@ public class NotProd implements ApplicationRunner {
 		cartService.addItem(memberUser4, product3);
 
 		Order order4 = orderService.createOrder(memberUser4);
+
+		memberService.addCash(memberUser5, 150_000, CashLog.EventType.충전__무통장입금, memberUser5);
+
+		cartService.addItem(memberUser5, product1);
+		Order order5 = orderService.createOrder(memberUser5);
+		orderService.payByCashOnly(order5);
+
+		cartService.addItem(memberUser5, product2);
+		Order order6 = orderService.createOrder(memberUser5);
+		orderService.cancel(order6);
+
+		cartService.addItem(memberUser5, product3);
+		Order order7 = orderService.createOrder(memberUser5);
 	}
 
 	@Transactional

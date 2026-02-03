@@ -103,13 +103,16 @@ public class OrderService {
 	}
 
 	@Transactional
-	public void refund(Order order) {
-		long payPrice = order.calcPayPrice();
-
-		memberService.addCash(order.getBuyer(), payPrice, 환불__예치금_주문결제, order);
+	public void cancel(Order order) {
+		if (!order.isCancelable()) {
+			throw new GlobalException(BAD_REQUEST.value(), "취소할 수 없는 주문입니다.");
+		}
 
 		order.setCancelDate();
-		order.setRefundDate();
+
+		if (order.isPayDone()) {
+			refund(order);
+		}
 	}
 
 	public void checkCanPay(String orderCode, long pgPayPrice) {
@@ -153,5 +156,13 @@ public class OrderService {
 		Member buyer, Boolean payStatus, Boolean cancelStatus, Boolean refundStatus, Pageable pageable
 	) {
 		return orderRepository.search(buyer, payStatus, cancelStatus, refundStatus, pageable);
+	}
+
+	private void refund(Order order) {
+		long payPrice = order.calcPayPrice();
+
+		memberService.addCash(order.getBuyer(), payPrice, 환불__예치금_주문결제, order);
+
+		order.setRefundDate();
 	}
 }
