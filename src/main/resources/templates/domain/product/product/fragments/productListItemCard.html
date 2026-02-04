@@ -29,8 +29,18 @@
             >
                 <i class="fa-solid fa-heart text-[#ff0000] group-hover:text-[#afafaf]"></i>
             </a>
+
             <a class="btn btn-sm btn-outline" href="">바로결제</a>
-            <a class="btn btn-sm btn-outline" href="">장바구니에 담기</a>
+
+            <a method="POST" th:if="${@cartService.canAdd(@rq.member, product)}"
+               th:href="|/cart/add/${product.id}?redirectUrl=${@rq.encodeCurrentUrl}|"
+               class="btn btn-sm btn-outline"
+            >장바구니</a>
+
+            <a method="DELETE" th:if="${@cartService.canRemove(@rq.member, product)}"
+               th:href="|/cart/remove/${product.id}?redirectUrl=${@rq.encodeCurrentUrl}|"
+               class="btn btn-sm btn-outline"
+            >장바구니</a>
         </div>
     </div>
 </th:block>
