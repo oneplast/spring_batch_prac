@@ -1,5 +1,6 @@
 package io.devground.spring_batch_prac.domain.product.product.service;
 
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.stereotype.Service;
@@ -48,5 +49,9 @@ public class ProductBookmarkService {
 		}
 
 		return productBookmarkRepository.existsByMemberAndProduct(actor, product);
+	}
+
+	public List<ProductBookmark> findByMember(Member actor) {
+		return productBookmarkRepository.findByMemberOrderByIdDesc(actor);
 	}
 }
