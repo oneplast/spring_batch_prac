@@ -15,6 +15,6 @@ public class GlobalCommonExceptionHandler {
 
 	@ExceptionHandler(GlobalException.class)
 	public String handle(GlobalException ex) {
-		return rq.historyBack(ex.getRsData().getMsg());
+		return rq.historyBack(ex);
 	}
 }

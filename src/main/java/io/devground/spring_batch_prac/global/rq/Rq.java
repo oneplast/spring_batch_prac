@@ -14,13 +14,17 @@ import org.springframework.web.context.annotation.RequestScope;
 import io.devground.spring_batch_prac.domain.member.member.entity.Member;
 import io.devground.spring_batch_prac.domain.member.member.service.MemberService;
 import io.devground.spring_batch_prac.global.app.AppConfig;
+import io.devground.spring_batch_prac.global.exception.GlobalException;
 import io.devground.spring_batch_prac.global.rsdata.RsData;
 import io.devground.spring_batch_prac.global.security.SecurityUser;
+import io.devground.spring_batch_prac.standard.util.ExceptionUtils;
 import io.devground.spring_batch_prac.standard.util.Ut;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @RequestScope
 @RequiredArgsConstructor
@@ -59,6 +63,15 @@ public class Rq {
 		}
 
 		return sb.toString();
+	}
+
+	public String historyBack(GlobalException ex) {
+		String exStr = ExceptionUtils.toString(ex);
+
+		request.setAttribute("exStr", exStr);
+		log.debug(exStr);
+
+		return historyBack(ex.getRsData().getMsg());
 	}
 
 	public String historyBack(String msg) {
