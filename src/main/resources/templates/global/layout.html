@@ -28,9 +28,9 @@
 
 <div th:if="${@rq.login}" class="flex items-center gap-2">
     <img class="w-10 rounded-full" th:src="${@rq.profileImgUrl}">
-    <span>
+    <a href="/member/me">
         <span th:text="${@rq.member.nickname}"></span>님 환영합니다.
-    </span>
+    </a>
 </div>
 
 <th:block layout:fragment="header"></th:block>

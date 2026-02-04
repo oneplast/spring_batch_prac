@@ -1,0 +1,35 @@
+<html layout:decorate="~{global/usrLayout}">
+
+<head>
+    <title>내 정보</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+    <h1>내 정보</h1>
+
+    <div class="flex flex-col gap-2 mt-2">
+        <div>
+            <div>아이디</div>
+            <div>
+                <span th:text="${@rq.member.username}"></span>
+            </div>
+        </div>
+
+        <div>
+            <div>캐시</div>
+            <div>
+                <span th:text="${@rq.member.restCash}"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex gap-2">
+        <a href="/withdraw/apply" class="btn btn-sm">출금신청</a>
+    </div>
+</div>
+
+</body>
+
+</html>
