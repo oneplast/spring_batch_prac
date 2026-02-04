@@ -10,7 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import io.devground.spring_batch_prac.domain.book.book.entity.Book;
 import io.devground.spring_batch_prac.domain.member.myBook.entity.MyBook;
 import io.devground.spring_batch_prac.domain.product.product.entity.Product;
-import io.devground.spring_batch_prac.global.jpa.BaseEntity;
+import io.devground.spring_batch_prac.global.jpa.BaseTime;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -30,7 +30,7 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(callSuper = true)
-public class Member extends BaseEntity {
+public class Member extends BaseTime {
 
 	private String username;
 	private String password;

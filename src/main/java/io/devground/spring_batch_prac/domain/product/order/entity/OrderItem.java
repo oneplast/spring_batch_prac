@@ -1,7 +1,7 @@
 package io.devground.spring_batch_prac.domain.product.order.entity;
 
 import io.devground.spring_batch_prac.domain.product.product.entity.Product;
-import io.devground.spring_batch_prac.global.jpa.BaseEntity;
+import io.devground.spring_batch_prac.global.jpa.BaseTime;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
@@ -19,7 +19,7 @@ import lombok.ToString;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(callSuper = true)
-public class OrderItem extends BaseEntity {
+public class OrderItem extends BaseTime {
 
 	@ManyToOne
 	private Order order;

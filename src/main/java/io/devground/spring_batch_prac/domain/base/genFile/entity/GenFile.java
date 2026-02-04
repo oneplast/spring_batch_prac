@@ -1,7 +1,7 @@
 package io.devground.spring_batch_prac.domain.base.genFile.entity;
 
 import io.devground.spring_batch_prac.global.app.AppConfig;
-import io.devground.spring_batch_prac.global.jpa.BaseEntity;
+import io.devground.spring_batch_prac.global.jpa.BaseTime;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
@@ -31,7 +31,7 @@ import lombok.ToString;
 		@Index(name = "GenFile_idx2", columnList = "relTypeCode, typeCode, type2Code")
 	}
 )
-public class GenFile extends BaseEntity {
+public class GenFile extends BaseTime {
 
 	private String relTypeCode;
 	private long relId;

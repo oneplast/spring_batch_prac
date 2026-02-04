@@ -12,7 +12,7 @@ import io.devground.spring_batch_prac.domain.member.member.entity.Member;
 import io.devground.spring_batch_prac.domain.product.cart.entity.CartItem;
 import io.devground.spring_batch_prac.global.app.AppConfig;
 import io.devground.spring_batch_prac.global.exception.GlobalException;
-import io.devground.spring_batch_prac.global.jpa.BaseEntity;
+import io.devground.spring_batch_prac.global.jpa.BaseTime;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -34,7 +34,7 @@ import lombok.ToString;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(callSuper = true)
-public class Order extends BaseEntity {
+public class Order extends BaseTime {
 
 	@ManyToOne
 	private Member buyer;

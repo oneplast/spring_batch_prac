@@ -1,7 +1,7 @@
 package io.devground.spring_batch_prac.domain.cash.cash.entity;
 
 import io.devground.spring_batch_prac.domain.member.member.entity.Member;
-import io.devground.spring_batch_prac.global.jpa.BaseEntity;
+import io.devground.spring_batch_prac.global.jpa.BaseTime;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -21,7 +21,7 @@ import lombok.ToString;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(callSuper = true)
-public class CashLog extends BaseEntity {
+public class CashLog extends BaseTime {
 
 	@ManyToOne
 	private Member member;

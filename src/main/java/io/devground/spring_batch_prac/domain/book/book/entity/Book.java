@@ -2,7 +2,7 @@ package io.devground.spring_batch_prac.domain.book.book.entity;
 
 import io.devground.spring_batch_prac.domain.member.member.entity.Member;
 import io.devground.spring_batch_prac.domain.product.product.entity.Product;
-import io.devground.spring_batch_prac.global.jpa.BaseEntity;
+import io.devground.spring_batch_prac.global.jpa.BaseTime;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
@@ -21,7 +21,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class Book extends BaseEntity {
+public class Book extends BaseTime {
 
 	@ManyToOne
 	private Member author;
