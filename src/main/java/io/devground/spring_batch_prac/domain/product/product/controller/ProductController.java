@@ -74,6 +74,32 @@ public class ProductController {
 		return "domain/product/product/list";
 	}
 
+	@GetMapping("/myList")
+	public String showMyList(
+		@RequestParam(value = "kwType", defaultValue = "name") List<String> kwTypes,
+		@RequestParam(defaultValue = "") String kw,
+		@RequestParam(defaultValue = "1") int page,
+		Model model
+	) {
+
+		List<Sort.Order> sorts = new ArrayList<>();
+		sorts.add(Sort.Order.desc("id"));
+		Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(sorts));
+
+		Map<String, Boolean> kwTypesMap = kwTypes.stream()
+			.collect(Collectors.toMap(
+				kwType -> kwType,
+				kwType -> true
+			));
+
+		Page<Product> itemsPage = productService.search(rq.getMember(), true, kwTypes, kw, pageable);
+		model.addAttribute("itemPage", itemsPage);
+		model.addAttribute("kwTypesMap", kwTypesMap);
+		model.addAttribute("page", page);
+
+		return "domain/product/product/myList";
+	}
+
 	@GetMapping("/{id}")
 	@PreAuthorize("isAuthenticated()")
 	public String showDetail(@PathVariable long id) {
