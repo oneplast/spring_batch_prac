@@ -1,7 +1,14 @@
 <script th:inline="javascript">
     const failMsg = /*[[${failMsg}]]*/ null;
+    const exStr = /*[[${exStr}]]*/ null;
 
-    sessionStorage.setItem("historyBackFailMsg", failMsg);
+    if (failMsg) {
+        sessionStorage.setItem("historyBackFailMsg", failMsg);
+    }
+
+    if (exStr) {
+        sessionStorage.setItem("exStr__" + new Date(), exStr)
+    }
 
     history.back();
 </script>
