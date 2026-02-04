@@ -69,4 +69,8 @@ public class CartService {
 
 		return cartItemRepository.existsByBuyerAndProduct(buyer, product);
 	}
+
+	public boolean canDirectMakeOrder(Member buyer, Product product) {
+		return canAdd(buyer, product);
+	}
 }

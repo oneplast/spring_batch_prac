@@ -80,7 +80,7 @@ public class NotProd implements ApplicationRunner {
 		memberService.addCash(memberUser1, 150_000, CashLog.EventType.충전__무통장입금, memberUser1);
 		memberService.addCash(memberUser1, -20_000, CashLog.EventType.출금__통장입금, memberUser1);
 
-		Order order1 = orderService.createOrder(memberUser1);
+		Order order1 = orderService.createFromOrder(memberUser1);
 
 		long order1PayPrice = order1.calcPayPrice();
 
@@ -88,13 +88,13 @@ public class NotProd implements ApplicationRunner {
 
 		memberService.addCash(memberUser3, 150_000, CashLog.EventType.충전__무통장입금, memberUser3);
 
-		Order order2 = orderService.createOrder(memberUser3);
+		Order order2 = orderService.createFromOrder(memberUser3);
 		orderService.payByCashOnly(order2);
 		orderService.cancel(order2);
 
 		memberService.addCash(memberUser2, 150_000, CashLog.EventType.충전__무통장입금, memberUser2);
 
-		Order order3 = orderService.createOrder(memberUser2);
+		Order order3 = orderService.createFromOrder(memberUser2);
 		orderService.checkCanPay(order3, 55_000);
 		orderService.payByTossPayments(order3, 55_000);
 
@@ -104,25 +104,25 @@ public class NotProd implements ApplicationRunner {
 		cartService.addItem(memberUser4, product2);
 		cartService.addItem(memberUser4, product3);
 
-		Order order4 = orderService.createOrder(memberUser4);
+		Order order4 = orderService.createFromOrder(memberUser4);
 
 		memberService.addCash(memberUser5, 150_000, CashLog.EventType.충전__무통장입금, memberUser5);
 
 		cartService.addItem(memberUser5, product1);
-		Order order5 = orderService.createOrder(memberUser5);
+		Order order5 = orderService.createFromOrder(memberUser5);
 		orderService.payByCashOnly(order5);
 
 		cartService.addItem(memberUser5, product2);
-		Order order6 = orderService.createOrder(memberUser5);
+		Order order6 = orderService.createFromOrder(memberUser5);
 		orderService.cancel(order6);
 
 		cartService.addItem(memberUser5, product3);
-		Order order7 = orderService.createOrder(memberUser5);
+		Order order7 = orderService.createFromOrder(memberUser5);
 		orderService.payByCashOnly(order7);
 		orderService.cancel(order7);
 
 		cartService.addItem(memberUser5, product4);
-		Order order8 = orderService.createOrder(memberUser5);
+		Order order8 = orderService.createFromOrder(memberUser5);
 	}
 
 	@Transactional

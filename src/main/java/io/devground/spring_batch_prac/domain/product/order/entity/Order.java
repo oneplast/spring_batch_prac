@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 
 import io.devground.spring_batch_prac.domain.member.member.entity.Member;
 import io.devground.spring_batch_prac.domain.product.cart.entity.CartItem;
+import io.devground.spring_batch_prac.domain.product.product.entity.Product;
 import io.devground.spring_batch_prac.global.app.AppConfig;
 import io.devground.spring_batch_prac.global.exception.GlobalException;
 import io.devground.spring_batch_prac.global.jpa.BaseTime;
@@ -49,13 +50,17 @@ public class Order extends BaseTime {
 	private LocalDateTime refundDate;
 
 	public void addItem(CartItem cartItem) {
-		if (buyer.has(cartItem.getProduct())) {
-			throw new GlobalException(HttpStatus.BAD_REQUEST.value(), "이미 구매한 상풉입니다.");
+		addItem(cartItem.getProduct());
+	}
+
+	public void addItem(Product product) {
+		if (buyer.has(product)) {
+			throw new GlobalException(HttpStatus.BAD_REQUEST.value(), "이미 구매한 상품입니다.");
 		}
 
 		OrderItem orderItem = OrderItem.builder()
 			.order(this)
-			.product(cartItem.getProduct())
+			.product(product)
 			.build();
 
 		orderItems.add(orderItem);

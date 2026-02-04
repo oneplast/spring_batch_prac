@@ -17,6 +17,7 @@ import io.devground.spring_batch_prac.domain.product.cart.entity.CartItem;
 import io.devground.spring_batch_prac.domain.product.cart.service.CartService;
 import io.devground.spring_batch_prac.domain.product.order.entity.Order;
 import io.devground.spring_batch_prac.domain.product.order.repository.OrderRepository;
+import io.devground.spring_batch_prac.domain.product.product.entity.Product;
 import io.devground.spring_batch_prac.global.exception.GlobalException;
 import lombok.RequiredArgsConstructor;
 
@@ -30,7 +31,20 @@ public class OrderService {
 	private final MemberService memberService;
 
 	@Transactional
-	public Order createOrder(Member buyer) {
+	public Order createFromProduct(Member buyer, Product product) {
+		Order order = Order.builder()
+			.buyer(buyer)
+			.build();
+
+		order.addItem(product);
+
+		orderRepository.save(order);
+
+		return order;
+	}
+
+	@Transactional
+	public Order createFromOrder(Member buyer) {
 		List<CartItem> cartItems = cartService.findByBuyerOrderByIdDesc(buyer);
 
 		Order order = Order.builder()

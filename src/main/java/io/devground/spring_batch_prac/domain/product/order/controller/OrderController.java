@@ -38,6 +38,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import io.devground.spring_batch_prac.domain.member.member.entity.Member;
 import io.devground.spring_batch_prac.domain.product.order.entity.Order;
 import io.devground.spring_batch_prac.domain.product.order.service.OrderService;
+import io.devground.spring_batch_prac.domain.product.product.entity.Product;
+import io.devground.spring_batch_prac.domain.product.product.service.ProductService;
 import io.devground.spring_batch_prac.global.app.AppConfig;
 import io.devground.spring_batch_prac.global.exception.GlobalException;
 import io.devground.spring_batch_prac.global.rq.Rq;
@@ -51,12 +53,23 @@ import lombok.RequiredArgsConstructor;
 public class OrderController {
 
 	private final OrderService orderService;
+	private final ProductService productService;
 	private final Rq rq;
 	private final RestTemplate restTemplate;
 
+	@PostMapping("/directMakeOrder/{productId}")
+	public String directMakeOrder(@PathVariable long productId) {
+		Product product = productService.findById(productId)
+			.orElseThrow(() -> new GlobalException(BAD_REQUEST.value(), "존재하지 않는 상품입니다."));
+
+		Order order = orderService.createFromProduct(rq.getMember(), product);
+
+		return rq.redirect("/order/" + order.getId(), "주문이 완료되었습니다.");
+	}
+
 	@PostMapping("/createFromCart")
 	public String createFromCart() {
-		Order order = orderService.createOrder(rq.getMember());
+		Order order = orderService.createFromOrder(rq.getMember());
 
 		return rq.redirect("/order/" + order.getId(), "주문이 완료되었습니다.");
 	}
