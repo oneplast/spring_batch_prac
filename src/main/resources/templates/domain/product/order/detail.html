@@ -20,6 +20,12 @@
 
     <h1>결제 정보</h1>
 
+    <a th:if="${order.cancelable}" onclick="return confirm('정말로 취소하시겠습니까?');" method="DELETE"
+       th:href="|${order.id}/cancel?redirectUrl=${@rq.encodeCurrentUrl}|" class="btn btn-sm btn-secondary"
+    >주문취소</a>
+
+    <button onclick="history.back();" class="btn btn-primary btn-sm">뒤로가기</button>
+
     <div>
         <div>주문번호: [[${order.id}]]</div>
         <div>주문코드: [[${order.code}]]</div>
@@ -42,24 +48,24 @@
         <form method="POST" th:action="|/order/${order.id}/payByCash|" onsubmit="submitPayForm(this); return false;">
             <div>
                 <label>고객 이메일</label>
-                <input class="input-bordered" type="email" name="customerEmail" placeholder="customer@email.com"
+                <input class="input input-bordered" type="email" name="customerEmail" placeholder="customer@email.com"
                        value="test@test.com"/>
             </div>
 
             <div>
                 <label>고객 이름(실명)</label>
-                <input class="input-bordered" name="customerName" type="text" placeholder="홍길동" value="홍길동"/>
+                <input class="input input-bordered" name="customerName" type="text" placeholder="홍길동" value="홍길동"/>
             </div>
 
             <div>
                 <label>고객 휴대전화번호(- 제외)</label>
-                <input class="input-bordered" name="customerMobilePhone" type="text" placeholder="01012341234"
+                <input class="input input-bordered" name="customerMobilePhone" type="text" placeholder="01012341234"
                        value="01012341234"/>
             </div>
 
             <div>
                 <label>캐시</label>
-                <input class="input-bordered" name="useCash" type="number"
+                <input class="input input-bordered" name="useCash" type="number"
                        th:max-cash="${order.calcPayPrice > actorRestCash ? actorRestCash : order.calcPayPrice}"
                        th:placehoder="${'0 ~ ' + (order.calcPayPrice > actorRestCash ? actorRestCash : order.calcPayPrice)}"
                 />

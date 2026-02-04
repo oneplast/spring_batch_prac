@@ -45,9 +45,13 @@
                     </div>
                     <div>결제상태: [[${order.forPrintPayStatus}]]</div>
                     <div>취소상태: [[${order.forPrintCancelStatus}]]</div>
-                    <div>환불가능: [[${order.forPrintRefundStatus}]]</div>
+                    <div>환불상태: [[${order.forPrintRefundStatus}]]</div>
                 </div>
                 <div class="card-actions justify-end">
+                    <a th:if="${order.cancelable}" onclick="return confirm('정말로 취소하시겠습니까?');" method="DELETE"
+                       th:href="|${order.id}/cancel?redirectUrl=${@rq.encodeCurrentUrl}|"
+                       class="btn btn-sm btn-secondary"
+                    >주문취소</a>
                     <a th:href="|${order.id}|" class="btn btn-sm btn-primary">자세히 보기</a>
                 </div>
             </div>
