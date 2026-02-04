@@ -25,6 +25,18 @@
                 <h2 class="card-title">
                     <span th:text="|${product.id} : ${product.name}|"></span>
                 </h2>
+
+                <div>
+                    <span th:text="|${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}원|"></span>
+                </div>
+
+                <div class="card-actions justify-end">
+                    <a class="btn btn-sm btn-outline group" href="">
+                        <i class="fa-solid fa-heart text-[#afafaf] group-hover:text-[#ff0000]"></i>
+                    </a>
+                    <a class="btn btn-sm btn-outline" href="">바로결제</a>
+                    <a class="btn btn-sm btn-outline" href="">장바구니에 담기</a>
+                </div>
             </div>
         </li>
     </ul>
