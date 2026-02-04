@@ -12,6 +12,7 @@
     <a class="btn btn-link" href="/">홈</a>
     <a class="btn btn-link" href="/product/list">책</a>
     <a class="btn btn-link" th:if="${@rq.admin}" href="/adm">관리자 홈</a>
+    <a class="btn btn-link" th:if="${@rq.login}" href="/product/bookmarkList">찜 상품</a>
     <a class="btn btn-link" th:if="${@rq.login}" href="/order/myList">주문</a>
     <a class="btn btn-link" th:if="${@rq.login}" href="/member/logout">로그아웃</a>
     <a class="btn btn-link" th:if="${@rq.logout}" href="/member/login">로그인</a>
