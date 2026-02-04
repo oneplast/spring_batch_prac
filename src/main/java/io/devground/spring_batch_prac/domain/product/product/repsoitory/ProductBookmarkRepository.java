@@ -9,4 +9,6 @@ import io.devground.spring_batch_prac.domain.product.product.entity.ProductBookm
 public interface ProductBookmarkRepository extends JpaRepository<ProductBookmark, Long> {
 
 	boolean existsByMemberAndProduct(Member actor, Product product);
+
+	void deleteByMemberAndProduct(Member actor, Product product);
 }

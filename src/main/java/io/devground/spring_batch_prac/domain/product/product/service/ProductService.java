@@ -51,7 +51,12 @@ public class ProductService {
 
 	@Transactional
 	public void bookmark(Member member, Product product) {
-		productBookmarkService.createProductBookmark(member, product);
+		productBookmarkService.bookmark(member, product);
+	}
+
+	@Transactional
+	public void cancelBookmark(Member member, Product product) {
+		productBookmarkService.cancelBookmark(member, product);
 	}
 
 	public boolean canBookmark(Member actor, Product product) {
