@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,6 +18,7 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.apache.catalina.util.URLEncoder;
 import org.apache.tika.Tika;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -259,6 +261,10 @@ public class Ut {
 			String urlAfter = url.substring(startPoint + endPoint + 1);
 
 			return url.substring(0, startPoint) + urlAfter;
+		}
+
+		public static String encode(String url) {
+			return new URLEncoder().encode(url, StandardCharsets.UTF_8);
 		}
 	}
 

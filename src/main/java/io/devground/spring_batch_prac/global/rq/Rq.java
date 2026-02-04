@@ -43,7 +43,12 @@ public class Rq {
 		sb.append(url);
 
 		if (StringUtils.hasText(msg)) {
-			sb.append("?msg=");
+			if (url.contains("?")) {
+				sb.append("&msg=");
+			} else {
+				sb.append("?msg=");
+			}
+
 			sb.append(msg);
 		}
 
@@ -123,5 +128,20 @@ public class Rq {
 
 	public String getProfileImgUrl() {
 		return memberService.getProfileImgUrl(getMember());
+	}
+
+	public String getEncodeCurrentUrl() {
+		return Ut.url.encode(getCurrentUrl());
+	}
+
+	private String getCurrentUrl() {
+		String url = request.getRequestURI();
+		String queryString = request.getQueryString();
+
+		if (queryString != null) {
+			url += "?" + queryString;
+		}
+
+		return url;
 	}
 }

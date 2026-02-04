@@ -52,6 +52,11 @@ spring:
       max-file-size: 50MB
       max-request-size: ${spring.servlet.multipart.max-file-size}
 
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
 logging:
   level:
     io.devground.spring_batch_prac: DEBUG

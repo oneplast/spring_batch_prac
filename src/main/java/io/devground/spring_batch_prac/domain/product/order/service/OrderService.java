@@ -138,6 +138,10 @@ public class OrderService {
 		return order.calcPayPrice() <= restCash + pgPayPrice;
 	}
 
+	public boolean canCancel(Member actor, Order order) {
+		return actor.equals(order.getBuyer()) && order.isCancelable();
+	}
+
 	public Optional<Order> findById(long id) {
 		return orderRepository.findById(id);
 	}

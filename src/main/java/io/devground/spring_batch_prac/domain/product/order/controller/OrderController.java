@@ -20,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,6 +52,24 @@ public class OrderController {
 	private final OrderService orderService;
 	private final Rq rq;
 	private final RestTemplate restTemplate;
+
+	@DeleteMapping("/{id}/cancel")
+	public String cancel(@PathVariable long id, String redirectUrl) {
+		Order order = orderService.findById(id)
+			.orElseThrow(() -> new GlobalException(NOT_FOUND.value(), "존재하지 않는 주문입니다."));
+
+		if (!orderService.canCancel(rq.getMember(), order)) {
+			throw new GlobalException(FORBIDDEN.value(), "권한이 없습니다.");
+		}
+
+		orderService.cancel(order);
+
+		if (!StringUtils.hasText(redirectUrl)) {
+			redirectUrl = "/order/" + order.getId();
+		}
+
+		return rq.redirect(redirectUrl, "주문이 취소되었습니다.");
+	}
 
 	@GetMapping("/myList")
 	@PreAuthorize("isAuthenticated()")
