@@ -43,7 +43,7 @@ public class CartService {
 		cartItemRepository.deleteByBuyerAndProduct(buyer, product);
 	}
 
-	public List<CartItem> findByBuyer(Member buyer) {
+	public List<CartItem> findByBuyerOrderByIdDesc(Member buyer) {
 
 		return cartItemRepository.findByBuyer(buyer);
 	}

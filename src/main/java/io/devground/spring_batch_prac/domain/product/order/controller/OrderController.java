@@ -47,11 +47,19 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/order")
+@PreAuthorize("isAuthenticated()")
 public class OrderController {
 
 	private final OrderService orderService;
 	private final Rq rq;
 	private final RestTemplate restTemplate;
+
+	@PostMapping("/createFromCart")
+	public String createFromCart() {
+		Order order = orderService.createOrder(rq.getMember());
+
+		return rq.redirect("/order/" + order.getId(), "주문이 완료되었습니다.");
+	}
 
 	@DeleteMapping("/{id}/cancel")
 	public String cancel(@PathVariable long id, String redirectUrl) {
@@ -72,7 +80,6 @@ public class OrderController {
 	}
 
 	@GetMapping("/myList")
-	@PreAuthorize("isAuthenticated()")
 	public String showMyList(
 		@RequestParam(defaultValue = "1") int page,
 		Boolean payStatus,
@@ -86,13 +93,12 @@ public class OrderController {
 
 		Page<Order> orderPage = orderService.search(rq.getMember(), payStatus, cancelStatus, refundStatus, pageable);
 
-		rq.setAttribute("orderPage", orderPage);
+		rq.attr("orderPage", orderPage);
 
 		return "domain/product/order/myList";
 	}
 
 	@GetMapping("/{id}")
-	@PreAuthorize("isAuthenticated()")
 	public String showDetail(@PathVariable long id, Model model) {
 		Order order = orderService.findById(id)
 			.orElseThrow(() -> new GlobalException(NOT_FOUND.value(), "존재하지 않는 주문입니다."));
@@ -126,16 +132,14 @@ public class OrderController {
 	}
 
 	@GetMapping("/success")
-	@PreAuthorize("isAuthenticated()")
 	public String showSuccess() {
 		return "domain/product/order/success";
 	}
 
 	@GetMapping("/fail")
-	@PreAuthorize("isAuthenticated()")
 	public String showFail(String failCode, String failMessage) {
-		rq.setAttribute("code", failCode);
-		rq.setAttribute("message", failMessage);
+		rq.attr("code", failCode);
+		rq.attr("message", failMessage);
 
 		return "domain/product/order/fail";
 	}

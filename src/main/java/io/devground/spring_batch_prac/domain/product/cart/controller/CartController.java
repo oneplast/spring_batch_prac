@@ -2,14 +2,18 @@ package io.devground.spring_batch_prac.domain.product.cart.controller;
 
 import static org.springframework.http.HttpStatus.*;
 
+import java.util.List;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import io.devground.spring_batch_prac.domain.product.cart.entity.CartItem;
 import io.devground.spring_batch_prac.domain.product.cart.service.CartService;
 import io.devground.spring_batch_prac.domain.product.product.entity.Product;
 import io.devground.spring_batch_prac.domain.product.product.service.ProductService;
@@ -25,6 +29,22 @@ public class CartController {
 	private final Rq rq;
 	private final CartService cartService;
 	private final ProductService productService;
+
+	@GetMapping("/list")
+	@PreAuthorize("isAuthenticated()")
+	public String showList() {
+		List<CartItem> cartItems = cartService.findByBuyerOrderByIdDesc(rq.getMember());
+
+		long totalPrice = cartItems.stream()
+			.map(CartItem::getProduct)
+			.mapToLong(Product::getPrice)
+			.sum();
+
+		rq.attr("totalPrice", totalPrice);
+		rq.attr("cartItems", cartItems);
+
+		return "domain/product/cart/list";
+	}
 
 	@PostMapping("/add/{id}")
 	@PreAuthorize("isAuthenticated()")
