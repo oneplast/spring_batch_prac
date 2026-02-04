@@ -1,6 +1,7 @@
 package io.devground.spring_batch_prac.domain.product.cart.service;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -37,13 +38,35 @@ public class CartService {
 		return cartItem;
 	}
 
-	public List<CartItem> findItemsByBuyer(Member buyer) {
+	@Transactional
+	public void removeItem(Member buyer, Product product) {
+		cartItemRepository.deleteByBuyerAndProduct(buyer, product);
+	}
+
+	public List<CartItem> findByBuyer(Member buyer) {
 
 		return cartItemRepository.findByBuyer(buyer);
 	}
 
+	@Transactional
 	public void delete(CartItem cartItem) {
 
 		cartItemRepository.delete(cartItem);
+	}
+
+	public boolean canAdd(Member buyer, Product product) {
+		if (Objects.isNull(buyer)) {
+			return false;
+		}
+
+		return !cartItemRepository.existsByBuyerAndProduct(buyer, product);
+	}
+
+	public boolean canRemove(Member buyer, Product product) {
+		if (Objects.isNull(buyer)) {
+			return false;
+		}
+
+		return cartItemRepository.existsByBuyerAndProduct(buyer, product);
 	}
 }
