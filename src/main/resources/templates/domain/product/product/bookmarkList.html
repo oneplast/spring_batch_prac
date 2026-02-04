@@ -9,34 +9,8 @@
 <div layout:fragment="content">
     <ul class="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <li class="card bg-base-100 shadow-xl" th:each="productBookmark: ${productBookmarks}">
-            <th:block th:with="product = ${productBookmark.product}">
-                <div class="card-body">
-                    <h2 class="card-title">
-                        <span th:text="|${product.id} : ${product.name}|"></span>
-                    </h2>
-
-                    <div>
-                        <span th:text="|${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}원|"></span>
-                    </div>
-
-                    <div class="card-actions justify-end">
-                        <a method="POST" th:if="${@productService.canBookmark(@rq.member, product)}"
-                           th:href="|/product/${product.id}/bookmark?redirectUrl=${@rq.encodeCurrentUrl}|"
-                           class="btn btn-sm btn-outline group"
-                        >
-                            <i class="fa-solid fa-heart text-[#afafaf] group-hover:text-[#ff0000]"></i>
-                        </a>
-                        <a method="DELETE" th:if="${@productService.canCancelBookmark(@rq.member, product)}"
-                           th:href="|/product/${product.id}/cancelBookmark?redirectUrl=${@rq.encodeCurrentUrl}|"
-                           class="btn btn-sm btn-outline group"
-                        >
-                            <i class="fa-solid fa-heart text-[#ff0000] group-hover:text-[#afafaf]"></i>
-                        </a>
-                        <a class="btn btn-sm btn-outline" href="">바로결제</a>
-                        <a class="btn btn-sm btn-outline" href="">장바구니에 담기</a>
-                    </div>
-                </div>
-            </th:block>
+            <th:block
+                    th:replace="domain/product/product/fragments/productListItemCard::productListItemCard(${productBookmark.product})"/>
         </li>
     </ul>
 </div>
