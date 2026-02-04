@@ -29,7 +29,7 @@
     </form>
 
     <ul class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <li class="card bg-base-100 shadow-xl" th:each="order : ${itemPage.content}">
+        <li class="card bg-base-100 shadow-xl" th:each="order : ${orderPage.content}">
             <div class="card-body">
                 <h2 class="card-title">
                     <span th:text="|${order.id} : ${order.name}|"></span>
