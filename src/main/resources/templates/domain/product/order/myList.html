@@ -10,21 +10,21 @@
     <form>
         <select class="select-bordered" name="cancelStatus" onchange="$(this.form).submit()"
                 th:value="${param.cancelStatus}">
-            <option value="">취소상태</option>
-            <option value="true">취소</option>
-            <option value="false">취소가능</option>
+            <option value="">취소상태 - 전체</option>
+            <option value="true">취소완료</option>
+            <option value="false">취소(x)</option>
         </select>
         <select class="select-bordered" name="payStatus" onchange="$(this.form).submit()"
                 th:value="${param.payStatus}">
-            <option value="">결제상태</option>
+            <option value="">결제상태 - 전체</option>
             <option value="true">결제완료</option>
-            <option value="false">결제대기</option>
+            <option value="false">결제(x)</option>
         </select>
         <select class="select-bordered" name="refundStatus" onchange="$(this.form).submit()"
                 th:value="${param.refundStatus}">
-            <option value="">환불상태</option>
+            <option value="">환불상태 - 전체</option>
             <option value="true">환불완료</option>
-            <option value="false">환불대기</option>
+            <option value="false">환불(x)</option>
         </select>
     </form>
 
