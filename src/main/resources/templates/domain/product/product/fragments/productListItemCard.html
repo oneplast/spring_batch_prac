@@ -30,7 +30,10 @@
                 <i class="fa-solid fa-heart text-[#ff0000] group-hover:text-[#afafaf]"></i>
             </a>
 
-            <a class="btn btn-sm btn-outline" href="">바로결제</a>
+            <a method="POST" th:if="${@cartService.canDirectMakeOrder(@rq.member, product)}"
+               th:href="|/order/directMakeOrder/${product.id}|"
+               class="btn btn-sm btn-outline"
+            >바로결제</a>
 
             <a method="POST" th:if="${@cartService.canAdd(@rq.member, product)}"
                th:href="|/cart/add/${product.id}?redirectUrl=${@rq.encodeCurrentUrl}|"
