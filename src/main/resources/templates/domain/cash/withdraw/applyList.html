@@ -42,11 +42,19 @@
                     </div>
 
                     <div>
-                        <div>상태</div>
+                        <div>처리상태</div>
                         <div>
-                            <a method="DELETE" th:href="|/withdraw/${withdrawApply.id}/delete|"
+                            <span th:text="${withdrawApply.forPrintWithdrawStatus}"></span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div>작업</div>
+                        <div>
+                            <a th:if="${@withdrawService.canDelete(@rq.member, withdrawApply)}"
+                               method="DELETE" th:href="|/withdraw/${withdrawApply.id}/delete|"
                                class="btn btn-error btn-sm"
-                               onclick="return confirm('정말로 삭제하시겠습니까?')"
+                               onclick="return confirm('정말로 삭제하시겠습니까?');"
                             >삭제</a>
                         </div>
                     </div>
