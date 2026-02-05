@@ -35,6 +35,11 @@ public class WithdrawService {
 	}
 
 	@Transactional
+	public void cancel(WithdrawApply withdrawApply) {
+		withdrawApply.setCancelDone("관리자에 의해 취소됨, 잔액부족");
+	}
+
+	@Transactional
 	public void delete(WithdrawApply withdrawApply) {
 		withdrawRepository.delete(withdrawApply);
 	}
@@ -52,8 +57,32 @@ public class WithdrawService {
 		return actor.getRestCash() >= cash;
 	}
 
+	public boolean canCancel(Member actor, WithdrawApply withdrawApply) {
+		if (withdrawApply.isWithdrawDone()) {
+			return false;
+		}
+
+		if (withdrawApply.isCancelDone()) {
+			return false;
+		}
+
+		if (!actor.isAdmin()) {
+			return false;
+		}
+
+		if (withdrawApply.getApplicant().getRestCash() >= withdrawApply.getCash()) {
+			return false;
+		}
+
+		return true;
+	}
+
 	public boolean canDelete(Member actor, WithdrawApply withdrawApply) {
 		if (withdrawApply.isWithdrawDone()) {
+			return false;
+		}
+
+		if (withdrawApply.isCancelDone()) {
 			return false;
 		}
 
@@ -73,8 +102,11 @@ public class WithdrawService {
 			return false;
 		}
 
-		if (actor.isAdmin()) {
-			return true;
+		if (withdrawApply.isCancelDone())
+			return false;
+
+		if (!actor.isAdmin()) {
+			return false;
 		}
 
 		if (withdrawApply.getApplicant().getRestCash() < withdrawApply.getCash()) {

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import io.devground.spring_batch_prac.domain.book.book.entity.Book;
 import io.devground.spring_batch_prac.domain.book.book.service.BookService;
 import io.devground.spring_batch_prac.domain.cash.cash.entity.CashLog;
+import io.devground.spring_batch_prac.domain.cash.withdraw.service.WithdrawService;
 import io.devground.spring_batch_prac.domain.member.member.entity.Member;
 import io.devground.spring_batch_prac.domain.member.member.service.MemberService;
 import io.devground.spring_batch_prac.domain.product.cart.service.CartService;
@@ -33,6 +34,7 @@ public class NotProd implements ApplicationRunner {
 	private final CartService cartService;
 	private final ProductService productService;
 	private final OrderService orderService;
+	private final WithdrawService withdrawService;
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
@@ -107,6 +109,8 @@ public class NotProd implements ApplicationRunner {
 		Order order4 = orderService.createFromOrder(memberUser4);
 
 		memberService.addCash(memberUser5, 150_000, CashLog.EventType.충전__무통장입금, memberUser5);
+
+		withdrawService.apply(memberUser5, 150_000, "국민은행", "1234");
 
 		cartService.addItem(memberUser5, product1);
 		Order order5 = orderService.createFromOrder(memberUser5);

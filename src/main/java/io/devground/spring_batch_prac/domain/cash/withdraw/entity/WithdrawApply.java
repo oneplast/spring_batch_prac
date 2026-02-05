@@ -32,6 +32,8 @@ public class WithdrawApply extends BaseTime {
 
 	private long cash;
 
+	private String msg;
+
 	private LocalDateTime withdrawDate;
 	private LocalDateTime cancelDate;
 
@@ -43,11 +45,28 @@ public class WithdrawApply extends BaseTime {
 		return "처리가능";
 	}
 
+	public String getForPrintCancelStatus() {
+		if (cancelDate != null) {
+			return "취소완료(" + cancelDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + ")";
+		}
+
+		return "-";
+	}
+
 	public void setWithdrawDone() {
 		withdrawDate = LocalDateTime.now();
 	}
 
+	public void setCancelDone(String msg) {
+		cancelDate = LocalDateTime.now();
+		this.msg = msg;
+	}
+
 	public boolean isWithdrawDone() {
 		return withdrawDate != null;
+	}
+
+	public boolean isCancelDone() {
+		return cancelDate != null;
 	}
 }
