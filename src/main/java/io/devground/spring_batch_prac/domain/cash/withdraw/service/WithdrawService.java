@@ -51,6 +51,10 @@ public class WithdrawService {
 		return !withdrawApply.isWithdrawDone();
 	}
 
+	public List<WithdrawApply> findAll() {
+		return withdrawRepository.findAllByOrderByIdDesc();
+	}
+
 	public List<WithdrawApply> findByApplicant(Member applicant) {
 		return withdrawRepository.findByApplicantOrderByIdDesc(applicant);
 	}

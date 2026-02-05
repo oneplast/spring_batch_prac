@@ -10,4 +10,6 @@ import io.devground.spring_batch_prac.domain.member.member.entity.Member;
 public interface WithdrawRepository extends JpaRepository<WithdrawApply, Long> {
 
 	List<WithdrawApply> findByApplicantOrderByIdDesc(Member applicant);
+
+	List<WithdrawApply> findAllByOrderByIdDesc();
 }
