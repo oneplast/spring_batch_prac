@@ -40,6 +40,16 @@
                             <span th:text="${withdrawApply.createDate}"></span>
                         </div>
                     </div>
+
+                    <div>
+                        <div>상태</div>
+                        <div>
+                            <a method="DELETE" th:href="|/withdraw/${withdrawApply.id}/delete|"
+                               class="btn btn-error btn-sm"
+                               onclick="return confirm('정말로 삭제하시겠습니까?')"
+                            >삭제</a>
+                        </div>
+                    </div>
                 </div>
             </li>
         </ul>
