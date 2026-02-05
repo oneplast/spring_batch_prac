@@ -1,5 +1,7 @@
 package io.devground.spring_batch_prac.domain.cash.withdraw.service;
 
+import static io.devground.spring_batch_prac.domain.cash.cash.entity.CashLog.EventType.*;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -9,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import io.devground.spring_batch_prac.domain.cash.withdraw.entity.WithdrawApply;
 import io.devground.spring_batch_prac.domain.cash.withdraw.repository.WithdrawRepository;
 import io.devground.spring_batch_prac.domain.member.member.entity.Member;
+import io.devground.spring_batch_prac.domain.member.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -17,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class WithdrawService {
 
 	private final WithdrawRepository withdrawRepository;
+	private final MemberService memberService;
 
 	@Transactional
 	public void apply(Member applicant, long cash, String bankName, String bankAccountNo) {
@@ -35,11 +39,24 @@ public class WithdrawService {
 		withdrawRepository.delete(withdrawApply);
 	}
 
+	@Transactional
+	public void withdraw(WithdrawApply withdrawApply) {
+		withdrawApply.setWithdrawDone();
+
+		memberService.addCash(withdrawApply.getApplicant(), -withdrawApply.getCash(), 출금__통장입금, withdrawApply);
+
+		delete(withdrawApply);
+	}
+
 	public boolean canApply(Member actor, long cash) {
 		return actor.getRestCash() >= cash;
 	}
 
 	public boolean canDelete(Member actor, WithdrawApply withdrawApply) {
+		if (withdrawApply.isWithdrawDone()) {
+			return false;
+		}
+
 		if (actor.isAdmin()) {
 			return true;
 		}
@@ -48,7 +65,23 @@ public class WithdrawService {
 			return false;
 		}
 
-		return !withdrawApply.isWithdrawDone();
+		return true;
+	}
+
+	public boolean canWithdraw(Member actor, WithdrawApply withdrawApply) {
+		if (withdrawApply.isWithdrawDone()) {
+			return false;
+		}
+
+		if (actor.isAdmin()) {
+			return true;
+		}
+
+		if (withdrawApply.getApplicant().getRestCash() < withdrawApply.getCash()) {
+			return false;
+		}
+
+		return true;
 	}
 
 	public List<WithdrawApply> findAll() {
