@@ -1,6 +1,7 @@
 package io.devground.spring_batch_prac.domain.cash.withdraw.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,11 +30,32 @@ public class WithdrawService {
 		withdrawRepository.save(apply);
 	}
 
+	@Transactional
+	public void delete(WithdrawApply withdrawApply) {
+		withdrawRepository.delete(withdrawApply);
+	}
+
 	public boolean canApply(Member actor, long cash) {
 		return actor.getRestCash() >= cash;
 	}
 
+	public boolean canDelete(Member actor, WithdrawApply withdrawApply) {
+		if (actor.isAdmin()) {
+			return true;
+		}
+
+		if (!withdrawApply.getApplicant().equals(actor)) {
+			return false;
+		}
+
+		return !withdrawApply.isWithdrawDone();
+	}
+
 	public List<WithdrawApply> findByApplicant(Member applicant) {
 		return withdrawRepository.findByApplicantOrderByIdDesc(applicant);
+	}
+
+	public Optional<WithdrawApply> findById(long id) {
+		return withdrawRepository.findById(id);
 	}
 }

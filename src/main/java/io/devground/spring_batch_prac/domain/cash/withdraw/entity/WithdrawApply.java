@@ -33,4 +33,8 @@ public class WithdrawApply extends BaseTime {
 
 	private LocalDateTime withdrawDate;
 	private LocalDateTime cancelDate;
+
+	public boolean isWithdrawDone() {
+		return withdrawDate != null;
+	}
 }
