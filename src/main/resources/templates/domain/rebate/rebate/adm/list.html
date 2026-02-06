@@ -47,6 +47,13 @@
                 <div>
                     정산여부 : <span th:text="${item.rebateDate}"></span>
                 </div>
+
+                <div class="card-actions justify-end">
+                    <a th:if="${@rebateService.canRebate(@rq.member, item)}" method="POST"
+                       th:href="|/adm/rebate/${item.id}/rebate?redirectUrl=${@rq.encodeCurrentUrl}|"
+                       class="btn btn-primary"
+                    >정산</a>
+                </div>
             </div>
         </li>
     </ul>
