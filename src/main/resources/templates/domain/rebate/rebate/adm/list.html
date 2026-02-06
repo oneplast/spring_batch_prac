@@ -17,9 +17,29 @@
         <option value="2026-02">2026-02</option>
     </select>
 
+    <div class="my-3 pl-8">
+        <label class="flex items-center gap-3">
+            <input type="checkbox" class="rebateItemCheckboxAll checkbox"/>
+            <span>전체 선택</span>
+        </label>
+
+        <div class="mt-2">
+            <button class="btn btn-primary" onclick="RebateForm__submit();">선택 정산</button>
+        </div>
+
+        <form method="POST" name="rebateForm" th:action="@{/adm/rebate/rebateMany}" hidden>
+            <input type="hidden" name="redirectUrl" th:value="${@rq.currentUrl}"/>
+            <input type="hidden" name="ids"/>
+        </form>
+    </div>
+
     <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
         <li class="card" th:each="item : ${items}">
             <div class="card-body bg-base-100 shadow">
+                <input type="checkbox" class="checkbox rebateItemCheckbox"
+                       th:value="${item.id}" onchange="RebateItemCheckbox__changed();"
+                       th:if="${@rebateService.canRebate(@rq.member, item)}"/>
+
                 <div class="card-title">
                     번호 : <span th:text="${item.id}"></span>
                 </div>
@@ -57,6 +77,50 @@
             </div>
         </li>
     </ul>
+
+    <script th:inline="javascript">
+        // 전체 선택 체크박스
+        const $rebateItemCheckboxAll = $('.rebateItemCheckboxAll');
+        // 아이템 체크박스
+        const $rebateItemCheckbox = $('.rebateItemCheckbox');
+
+        $rebateItemCheckboxAll.change(function () {
+            const allChecked = $(this).prop('checked');
+
+            // 아이템 체크박스들에게 체크 상태 동기화
+            $rebateItemCheckbox.prop('checked', allChecked);
+        });
+
+        function RebateItemCheckbox__changed() {
+            const allChecked = $rebateItemCheckbox.length === $('.rebateItemCheckbox:checked').length;
+
+            $rebateItemCheckboxAll.prop('checked', allChecked);
+        }
+
+        let RebateForm__submitDone = false;
+
+        function RebateForm__submit() {
+            if (RebateForm__submitDone) {
+                return;
+            }
+
+            const form = document.rebateForm;
+
+            const $checked = $('.rebateItemCheckbox:checked');
+
+            if ($checked.length === 0) {
+                toastWarning('정산할 품목을 선택해주세요.');
+
+                return;
+            }
+
+            const ids = $checked.map((index, el) => $(el).val()).get();
+
+            form.ids.value = ids;
+            form.submit();
+            RebateForm__submitDone = true;
+        }
+    </script>
 </div>
 
 </body>
