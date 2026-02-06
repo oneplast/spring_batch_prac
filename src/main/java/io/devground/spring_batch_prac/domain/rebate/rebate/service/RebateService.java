@@ -85,6 +85,18 @@ public class RebateService {
 		rebateItem.setRebateDone();
 	}
 
+	@Transactional
+	public void rebate(List<Long> ids) {
+
+		ids.forEach(id -> {
+				RebateItem rebateItem = rebateItemRepository.findById(id)
+					.orElseThrow(() -> new GlobalException(BAD_REQUEST.value(), "정산 데이터가 존재하지 않습니다."));
+
+				rebate(rebateItem);
+			}
+		);
+	}
+
 	public List<RebateItem> findByPayDateIn(String yearMonth) {
 
 		int monthEndDay = Ut.date.getEndDayOf(yearMonth);

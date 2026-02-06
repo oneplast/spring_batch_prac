@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import io.devground.spring_batch_prac.domain.product.order.service.OrderService;
 import io.devground.spring_batch_prac.domain.rebate.rebate.entity.RebateItem;
@@ -67,5 +68,13 @@ public class AdmRebateController {
 		rebateService.rebate(rebateItem);
 
 		return rq.redirect(redirectUrl, "%d번 정산 데이터를 처리하였습니다.".formatted(rebateItem.getId()));
+	}
+
+	@PostMapping("/rebateMany")
+	public String rebateMany(@RequestParam List<Long> ids, String redirectUrl) {
+
+		rebateService.rebate(ids);
+
+		return rq.redirect(redirectUrl, "정산 데이터를 처리하였습니다.");
 	}
 }
