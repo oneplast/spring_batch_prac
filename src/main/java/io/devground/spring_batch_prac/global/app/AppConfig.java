@@ -35,6 +35,12 @@ public class AppConfig {
 	@Getter
 	private static String tossPaymentsTargetUrl;
 
+	@Getter
+	private static double rebateRate;
+
+	@Getter
+	private static int orderCancelableSeconds;
+
 	@Value("${spring.profiles.active}")
 	public void setActiveProfile(String value) {
 		AppConfig.activeProfile = value;
@@ -63,6 +69,16 @@ public class AppConfig {
 	@Value("${custom.toss-payments.targetUrl}")
 	public void setTossPaymentsTargetUrl(String tossPaymentsTargetUrl) {
 		AppConfig.tossPaymentsTargetUrl = tossPaymentsTargetUrl;
+	}
+
+	@Value("${custom.rebate.rate}")
+	public void setRebateRate(double rebateRate) {
+		AppConfig.rebateRate = rebateRate;
+	}
+
+	@Value("${custom.order.cancelable-seconds}")
+	public void setOrderCancelableSeconds(int orderCancelableSeconds) {
+		AppConfig.orderCancelableSeconds = orderCancelableSeconds;
 	}
 
 	@Autowired

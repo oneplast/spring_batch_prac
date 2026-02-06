@@ -25,6 +25,9 @@ public class OrderItem extends BaseTime {
 	private Order order;
 	@ManyToOne
 	private Product product;
+	private int payPrice;
+
+	private double rebateRate;
 
 	public long getPayPrice() {
 		return product.getPrice();

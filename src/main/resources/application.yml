@@ -68,6 +68,11 @@ logging:
     org.springframework.security.oauth2: TRACE
 
 custom:
+  rebate:
+    rate: 0.7
+  order:
+    cancelable-seconds: 3600
+
   site:
     name: mb.onep.shop
     baseUrl: "http://localhost:${server.port}"

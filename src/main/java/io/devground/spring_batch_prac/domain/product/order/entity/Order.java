@@ -61,6 +61,8 @@ public class Order extends BaseTime {
 		OrderItem orderItem = OrderItem.builder()
 			.order(this)
 			.product(product)
+			.payPrice(product.getPrice())
+			.rebateRate(AppConfig.getRebateRate())
 			.build();
 
 		orderItems.add(orderItem);
@@ -165,6 +167,7 @@ public class Order extends BaseTime {
 			return false;
 		}
 
-		return payDate == null || !payDate.plusHours(1).isBefore(LocalDateTime.now());
+		return payDate == null || !payDate.plusSeconds(AppConfig.getOrderCancelableSeconds())
+			.isBefore(LocalDateTime.now());
 	}
 }
