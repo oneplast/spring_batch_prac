@@ -1,0 +1,49 @@
+<html layout:decorate="~{global/admLayout}">
+
+<head>
+    <title>정산 데이터</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+    <h1>정산 데이터</h1>
+
+    <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+        <li class="card" th:each="item : ${items}">
+            <div class="card-body bg-base-100 shadow">
+                <div class="card-title">
+                    번호 : <span th:text="${item.id}"></span>
+                </div>
+
+                <div>
+                    판매자 : <span th:text="${item.seller.username}"></span>
+                </div>
+
+                <div>
+                    구매자 : <span th:text="${item.buyer.username}"></span>
+                </div>
+
+                <div>
+                    결제금액 : <span th:text="${item.orderItem.payPrice}"></span>
+                </div>
+
+                <div>
+                    정산율 : <span th:text="${item.rebateRate}"></span>
+                </div>
+
+                <div>
+                    정산예정액 : <span th:text="${item.rebatePrice}"></span>
+                </div>
+
+                <div>
+                    정산여부 : <span th:text="${item.rebateDate}"></span>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+
+</body>
+
+</html>
