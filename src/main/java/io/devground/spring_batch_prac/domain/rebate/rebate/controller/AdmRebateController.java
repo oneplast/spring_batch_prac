@@ -1,17 +1,21 @@
 package io.devground.spring_batch_prac.domain.rebate.rebate.controller;
 
+import static org.springframework.http.HttpStatus.*;
+
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import io.devground.spring_batch_prac.domain.product.order.service.OrderService;
 import io.devground.spring_batch_prac.domain.rebate.rebate.entity.RebateItem;
 import io.devground.spring_batch_prac.domain.rebate.rebate.service.RebateService;
+import io.devground.spring_batch_prac.global.exception.GlobalException;
 import io.devground.spring_batch_prac.global.rq.Rq;
 import io.devground.spring_batch_prac.standard.util.Ut;
 import lombok.RequiredArgsConstructor;
@@ -52,5 +56,16 @@ public class AdmRebateController {
 		model.addAttribute("items", items);
 
 		return "domain/rebate/rebate/adm/list";
+	}
+
+	@PostMapping("/{id}/rebate")
+	public String rebate(@PathVariable long id, String redirectUrl) {
+
+		RebateItem rebateItem = rebateService.findById(id)
+			.orElseThrow(() -> new GlobalException(BAD_REQUEST.value(), "정산 데이터가 존재하지 않습니다."));
+
+		rebateService.rebate(rebateItem);
+
+		return rq.redirect(redirectUrl, "%d번 정산 데이터를 처리하였습니다.".formatted(rebateItem.getId()));
 	}
 }

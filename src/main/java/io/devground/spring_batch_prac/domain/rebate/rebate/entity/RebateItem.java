@@ -50,4 +50,12 @@ public class RebateItem extends BaseTime {
 	private double rebateRate;
 	private long rebatePrice;
 	private LocalDateTime rebateDate;
+
+	public void setRebateDone() {
+		this.rebateDate = LocalDateTime.now();
+	}
+
+	public boolean isRebateAvailable() {
+		return this.rebateDate == null;
+	}
 }
