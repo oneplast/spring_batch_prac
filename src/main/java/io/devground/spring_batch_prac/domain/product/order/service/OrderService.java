@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import io.devground.spring_batch_prac.domain.book.purchasedbook.service.PurchasedBookService;
 import io.devground.spring_batch_prac.domain.member.member.entity.Member;
 import io.devground.spring_batch_prac.domain.member.member.service.MemberService;
 import io.devground.spring_batch_prac.domain.product.cart.entity.CartItem;
@@ -29,6 +30,7 @@ public class OrderService {
 	private final OrderRepository orderRepository;
 	private final CartService cartService;
 	private final MemberService memberService;
+	private final PurchasedBookService purchasedBookService;
 
 	@Transactional
 	public Order createFromProduct(Member buyer, Product product) {
@@ -105,15 +107,18 @@ public class OrderService {
 		payDone(order);
 	}
 
-	public void payDone(String code) {
-		Order order = findByCode(code)
-			.orElseThrow(() -> new GlobalException(BAD_REQUEST.value(), "존재하지 않는 주문입니다."));
-
-		payDone(order);
-	}
-
 	public void payDone(Order order) {
 		order.setPaymentDone();
+
+		order.getOrderItems()
+			.forEach(oi -> {
+					Product product = oi.getProduct();
+
+					if (product.isBook()) {
+						purchasedBookService.add(order.getBuyer(), product.getBook());
+					}
+				}
+			);
 	}
 
 	@Transactional
