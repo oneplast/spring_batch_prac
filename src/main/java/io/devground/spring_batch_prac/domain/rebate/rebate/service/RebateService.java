@@ -35,7 +35,7 @@ public class RebateService {
 		LocalDateTime startDate = yearMonth_.atDay(1).atStartOfDay();
 		LocalDateTime endDate = yearMonth_.atEndOfMonth().atTime(23, 59, 59);
 
-		List<OrderItem> orderItems = orderService.findNotRefundedByPayDateBetween(startDate, endDate);
+		List<OrderItem> orderItems = orderService.findNotRebatedAndNotRefundedByPayDateBetween(startDate, endDate);
 
 		orderItems
 			.forEach(oi -> {
@@ -52,6 +52,8 @@ public class RebateService {
 						.build();
 
 					rebateItemRepository.save(rebateItem);
+
+					oi.setRebateItem(rebateItem);
 				}
 			);
 	}

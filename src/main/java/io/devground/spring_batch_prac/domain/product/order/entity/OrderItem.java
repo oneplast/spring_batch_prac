@@ -1,6 +1,7 @@
 package io.devground.spring_batch_prac.domain.product.order.entity;
 
 import io.devground.spring_batch_prac.domain.product.product.entity.Product;
+import io.devground.spring_batch_prac.domain.rebate.rebate.entity.RebateItem;
 import io.devground.spring_batch_prac.global.jpa.BaseTime;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -27,6 +28,8 @@ public class OrderItem extends BaseTime {
 	private Product product;
 	private long payPrice;
 
+	@ManyToOne
+	private RebateItem rebateItem;
 	private double rebateRate;
 
 	public void setPaymentDone() {
