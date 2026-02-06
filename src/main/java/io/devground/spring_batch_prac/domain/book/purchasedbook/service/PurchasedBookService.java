@@ -28,4 +28,11 @@ public class PurchasedBookService {
 
 		return purchasedBook;
 	}
+
+	@Transactional
+	public void delete(Member buyer, Book book) {
+
+		purchasedBookRepository.findTop1ByOwnerAndBookOrderByIdDesc(buyer, book)
+			.ifPresent(purchasedBookRepository::delete);
+	}
 }

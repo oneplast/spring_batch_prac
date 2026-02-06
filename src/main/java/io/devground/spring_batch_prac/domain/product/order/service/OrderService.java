@@ -187,5 +187,15 @@ public class OrderService {
 		memberService.addCash(order.getBuyer(), payPrice, 환불__예치금_주문결제, order);
 
 		order.setRefundDate();
+
+		order.getOrderItems()
+			.forEach(oi -> {
+					Product product = oi.getProduct();
+
+					if (product.isBook()) {
+						purchasedBookService.delete(order.getBuyer(), product.getBook());
+					}
+				}
+			);
 	}
 }
