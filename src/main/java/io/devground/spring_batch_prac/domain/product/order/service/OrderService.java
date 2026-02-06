@@ -185,8 +185,8 @@ public class OrderService {
 		return orderRepository.search(buyer, payStatus, cancelStatus, refundStatus, pageable);
 	}
 
-	public List<OrderItem> findByPayDateBetween(LocalDateTime startDate, LocalDateTime endDate) {
-		return orderItemRepository.findByOrderPayDateBetweenOrderByIdDesc(startDate, endDate);
+	public List<OrderItem> findNotRefundedByPayDateBetween(LocalDateTime startDate, LocalDateTime endDate) {
+		return orderItemRepository.findByOrderPayDateBetweenAndOrderRefundDateOrderByIdDesc(startDate, endDate, null);
 	}
 
 	private void refund(Order order) {
