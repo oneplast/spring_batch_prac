@@ -12,7 +12,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,7 +29,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class RebateItem extends BaseTime {
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(foreignKey = @ForeignKey(NO_CONSTRAINT))
 	private OrderItem orderItem;
 
