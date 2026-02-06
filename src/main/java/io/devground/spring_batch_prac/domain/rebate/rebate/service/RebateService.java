@@ -11,6 +11,7 @@ import io.devground.spring_batch_prac.domain.product.order.entity.OrderItem;
 import io.devground.spring_batch_prac.domain.product.order.service.OrderService;
 import io.devground.spring_batch_prac.domain.rebate.rebate.entity.RebateItem;
 import io.devground.spring_batch_prac.domain.rebate.rebate.repository.RebateItemRepository;
+import io.devground.spring_batch_prac.standard.util.Ut;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -45,6 +46,7 @@ public class RebateService {
 						.product(oi.getProduct())
 						.payPrice(oi.getPayPrice())
 						.eventDate(oi.getOrder().getPayDate())
+						.payDate(oi.getOrder().getPayDate())
 						.rebateRate(oi.getRebateRate())
 						.rebatePrice((long) Math.ceil(oi.getPayPrice() * oi.getRebateRate()))
 						.build();
@@ -52,5 +54,18 @@ public class RebateService {
 					rebateItemRepository.save(rebateItem);
 				}
 			);
+	}
+
+	public List<RebateItem> findByPayDateIn(String yearMonth) {
+
+		int monthEndDay = Ut.date.getEndDayOf(yearMonth);
+
+		String fromDateStr = yearMonth + "-01 00:00:00.000000";
+		String toDateStr = yearMonth + "-%02d 23:59:59.999999".formatted(monthEndDay);
+
+		LocalDateTime fromDate = Ut.date.parse(fromDateStr);
+		LocalDateTime toDate = Ut.date.parse(toDateStr);
+
+		return rebateItemRepository.findByPayDateBetweenOrderByIdAsc(fromDate, toDate);
 	}
 }

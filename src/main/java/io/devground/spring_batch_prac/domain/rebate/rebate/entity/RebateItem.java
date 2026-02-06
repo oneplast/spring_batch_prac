@@ -44,7 +44,8 @@ public class RebateItem extends BaseTime {
 	@JoinColumn(foreignKey = @ForeignKey(NO_CONSTRAINT))
 	private Product product;
 	private long payPrice;
-	private LocalDateTime eventDate;
+	private LocalDateTime eventDate;      // 주문 날짜
+	private LocalDateTime payDate;        // 결제 날짜
 
 	private double rebateRate;
 	private long rebatePrice;

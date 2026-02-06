@@ -14,6 +14,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -35,6 +38,33 @@ public class Ut {
 		public static String getCurrentDateFormatted(String pattern) {
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 			return simpleDateFormat.format(new Date());
+		}
+
+		public static String getCurrentYearMonth() {
+			return getCurrentDateFormatted("yyyy-MM");
+		}
+
+		public static int getEndDayOf(int year, int month) {
+			String yearMonth = year + "-" + "%02d".formatted(month);
+
+			return getEndDayOf(yearMonth);
+		}
+
+		public static int getEndDayOf(String yearMonth) {
+			LocalDate convertedDate = LocalDate.parse(yearMonth + "-01", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+			convertedDate = convertedDate.withDayOfMonth(
+				convertedDate.getMonth().length(convertedDate.isLeapYear())
+			);
+
+			return convertedDate.getDayOfMonth();
+		}
+
+		public static LocalDateTime parse(String pattern, String dateText) {
+			return LocalDateTime.parse(dateText, DateTimeFormatter.ofPattern(pattern));
+		}
+
+		public static LocalDateTime parse(String dateText) {
+			return parse("yyyy-MM-dd HH:mm:ss.SSSSSS", dateText);
 		}
 	}
 
