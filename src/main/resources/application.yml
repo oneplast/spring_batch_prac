@@ -73,9 +73,9 @@ custom:
     baseUrl: "http://localhost:${server.port}"
 
   temp:
-    dirPath: C:/Users/river/Devcourse/Spring/mb/temp
+    dirPath: ${user.home}/Devcourse/Spring/mb/temp
   genFile:
-    dirPath: C:/Users/river/Devcourse/Spring/mb
+    dirPath: ${user.home}/Devcourse/Spring/mb
 
   toss-payments:
     targetUrl: https://api.tosspayments.com/v1/payments/confirm
