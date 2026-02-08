@@ -3,7 +3,6 @@ package io.devground.spring_batch_prac.domain.product.order.service;
 import static io.devground.spring_batch_prac.domain.cash.cash.entity.CashLog.EventType.*;
 import static org.springframework.http.HttpStatus.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +17,6 @@ import io.devground.spring_batch_prac.domain.member.member.service.MemberService
 import io.devground.spring_batch_prac.domain.product.cart.entity.CartItem;
 import io.devground.spring_batch_prac.domain.product.cart.service.CartService;
 import io.devground.spring_batch_prac.domain.product.order.entity.Order;
-import io.devground.spring_batch_prac.domain.product.order.entity.OrderItem;
 import io.devground.spring_batch_prac.domain.product.order.repository.OrderItemRepository;
 import io.devground.spring_batch_prac.domain.product.order.repository.OrderRepository;
 import io.devground.spring_batch_prac.domain.product.product.entity.Product;
@@ -183,14 +181,6 @@ public class OrderService {
 		Member buyer, Boolean payStatus, Boolean cancelStatus, Boolean refundStatus, Pageable pageable
 	) {
 		return orderRepository.search(buyer, payStatus, cancelStatus, refundStatus, pageable);
-	}
-
-	public List<OrderItem> findNotRebatedAndNotRefundedByPayDateBetween(
-		LocalDateTime startDate, LocalDateTime endDate
-	) {
-		return orderItemRepository.findByOrderPayDateBetweenAndOrderRefundDateAndRebateItemOrderByIdDesc(
-			startDate, endDate, null, null
-		);
 	}
 
 	private void refund(Order order) {

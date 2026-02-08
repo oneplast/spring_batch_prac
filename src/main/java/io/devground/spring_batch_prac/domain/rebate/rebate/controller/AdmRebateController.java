@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import io.devground.spring_batch_prac.domain.product.order.service.OrderService;
 import io.devground.spring_batch_prac.domain.rebate.rebate.entity.RebateItem;
+import io.devground.spring_batch_prac.domain.rebate.rebate.service.RebateBatchService;
 import io.devground.spring_batch_prac.domain.rebate.rebate.service.RebateService;
 import io.devground.spring_batch_prac.global.exception.GlobalException;
 import io.devground.spring_batch_prac.global.rq.Rq;
@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class AdmRebateController {
 
 	private final RebateService rebateService;
-	private final OrderService orderService;
+	private final RebateBatchService rebateBatchService;
 	private final Rq rq;
 
 	@GetMapping("/make")
@@ -39,7 +39,7 @@ public class AdmRebateController {
 	@PostMapping("/make")
 	public String make(String yearMonth) {
 
-		rebateService.make(yearMonth);
+		rebateBatchService.make(yearMonth);
 
 		return rq.redirect("/adm/rebate/make", "정산 데이터를 생성했습니다.");
 	}

@@ -9,6 +9,12 @@ spring:
     active: dev
     include: secret
 
+  batch:
+    jdbc:
+      initialize-schema: always
+    job:
+      enabled: false
+
   threads:
     virtual:
       enabled: true
